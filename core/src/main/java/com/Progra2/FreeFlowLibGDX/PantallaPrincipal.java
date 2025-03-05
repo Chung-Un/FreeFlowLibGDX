@@ -41,7 +41,7 @@ public class PantallaPrincipal implements Screen{
         float margen=20;
         
         FotoFondo = new Texture("FotoFondo.png");
-        TituloFreeFlow = new Texture("FreeFlowTitulo.png");
+        TituloFreeFlow = new Texture("flowfree.png");
         botonCrear = new Boton(new Texture("botoncrear.png"), 0,0,botonGrosor, botonAltura,true,botonY);
         botonLogin = new Boton(new Texture("botonlogin.png"),0,0,botonGrosor,botonAltura,true,botonY - (botonAltura + margen));
         botonSalir = new Boton(new Texture("botonsalir.png"),0,0,botonGrosor,botonAltura,true,botonY - 2 * (botonAltura + margen));
