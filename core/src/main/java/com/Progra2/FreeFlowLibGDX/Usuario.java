@@ -23,7 +23,7 @@ public class Usuario implements Serializable {
     private LocalDate fechaRegistro;
     private LocalDateTime ultimaSesion;
     private int progreso;
-    private int 
+
     private String rutaAvatar; 
 
     // Estadísticas de juego
