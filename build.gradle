@@ -9,8 +9,7 @@ buildscript {
     maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
   }
   dependencies {
-
-
+    // Add required dependencies here if needed
   }
 }
 
@@ -18,7 +17,6 @@ allprojects {
   apply plugin: 'eclipse'
   apply plugin: 'idea'
 
-  // This allows you to "Build and run using IntelliJ IDEA", an option in IDEA's Settings.
   idea {
     module {
       outputDir file('build/classes/java/main')
@@ -31,20 +29,30 @@ configure(subprojects) {
   apply plugin: 'java-library'
   sourceCompatibility = JavaVersion.VERSION_22
 
-  // From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
-  // The article can be helpful when using assets.txt in your project.
+  // Ensure files are writable before deletion
+  tasks.withType(Delete).configureEach {
+    doFirst {
+      println "Releasing file locks before deletion..."
+      try {
+        file("${project.buildDir}").eachFileRecurse { file ->
+          file.setWritable(true)
+        }
+      } catch (Exception e) {
+        println "Warning: Could not release some file locks, continuing..."
+      }
+    }
+  }
+
+  // Task to automatically generate an asset list from the "assets" folder
   tasks.register('generateAssetList') {
     inputs.dir("${project.rootDir}/assets/")
-    // projectFolder/assets
     File assetsFolder = new File("${project.rootDir}/assets/")
-    // projectFolder/assets/assets.txt
     File assetsFile = new File(assetsFolder, "assets.txt")
-    // delete that file in case we've already created it
+
+    // Ensure old file is deleted before generating a new one
     assetsFile.delete()
 
-    // iterate through all files inside that folder
-    // convert it to a relative path
-    // and append it to the file assets.txt
+    // Collect and append asset file paths
     fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.sort().each {
       assetsFile.append(it + "\n")
     }
@@ -59,10 +67,10 @@ configure(subprojects) {
 subprojects {
   version = "$projectVersion"
   ext.appName = 'FreeFlowLibGDX'
+
   repositories {
     mavenCentral()
     maven { url 'https://s01.oss.sonatype.org' }
-    // You may want to remove the following line if you have errors downloading dependencies.
     mavenLocal()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
@@ -71,3 +79,21 @@ subprojects {
 }
 
 eclipse.project.name = 'FreeFlowLibGDX' + '-parent'
+
+// Force clean task to handle locked files before deletion
+tasks.register('forceClean', Delete) {
+    delete fileTree(dir: "${rootProject.buildDir}") {
+        exclude '**/.lock'  // Avoid deleting lock files causing issues
+    }
+    doLast {
+        println "Build directory cleaned successfully."
+    }
+}
+
+// Custom clean task that ensures deletion before building
+tasks.register('safeClean') {
+    dependsOn 'forceClean'
+    doLast {
+        println "Safe clean executed before building."
+    }
+}

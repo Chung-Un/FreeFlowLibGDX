@@ -7,10 +7,9 @@ package com.Progra2.FreeFlowLibGDX;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import static java.lang.System.exit;
+import java.util.ArrayList;
 
 /**
  *
@@ -20,19 +19,37 @@ public class PantallaPrincipal implements Screen{
     Music music;
     FreeFlow FreeFlow;
     Texture FotoFondo;
-    Texture botonSalir;
-    Texture botonLogin;
-    Texture botonCrearPlayer;
+    Texture texturaSalir;
+    Texture texturaLogin;
+    Texture texturaCrear;
     Texture TituloFreeFlow;
+    Boton botonCrear; 
+    Boton botonLogin;
+    Boton botonSalir;
+    ArrayList<Boton> botones;
     static float y, grosorPantalla, alturaPantalla, botonGrosor, botonAltura;
     
     public PantallaPrincipal(FreeFlow FreeFlow){
         this.FreeFlow = FreeFlow;
+        
+        grosorPantalla = Gdx.graphics.getWidth();
+        alturaPantalla = Gdx.graphics.getHeight();
+        texturaSalir = new Texture("botonsalir.png");
+        float botonGrosor = texturaSalir.getWidth()/2;
+        float botonAltura = texturaSalir.getHeight()/2;
+        float botonY = alturaPantalla-150;
+        float margen=20;
+        
         FotoFondo = new Texture("FotoFondo.png");
         TituloFreeFlow = new Texture("FreeFlowTitulo.png");
-        botonSalir = new Texture("botonSalir.png"); 
-        botonLogin = new Texture("botonLogin.png");
-        botonCrearPlayer = new Texture("botoncrear.png");
+        botonCrear = new Boton(new Texture("botoncrear.png"), 0,0,botonGrosor, botonAltura,true,botonY);
+        botonLogin = new Boton(new Texture("botonlogin.png"),0,0,botonGrosor,botonAltura,true,botonY - (botonAltura + margen));
+        botonSalir = new Boton(new Texture("botonsalir.png"),0,0,botonGrosor,botonAltura,true,botonY - 2 * (botonAltura + margen));
+        botones = new ArrayList();
+        botones.add(botonCrear);
+        botones.add(botonLogin);
+        botones.add(botonSalir);
+        
         music = Gdx.audio.newMusic(Gdx.files.internal("MainMusic.mp3"));
         music.setLooping(true);
         music.setVolume(0.5f);
@@ -55,31 +72,19 @@ public class PantallaPrincipal implements Screen{
     }
     
     public void dibujar(){
-        grosorPantalla = Gdx.graphics.getWidth();
-        alturaPantalla = Gdx.graphics.getHeight();
         float grosorTextura =301 ;
         float alturaTextura=40;
         float x = (grosorPantalla - grosorTextura)/2;
-        y = alturaPantalla - alturaTextura-40; //crear un margen arriba
+        y = alturaPantalla - alturaTextura-40; 
         FreeFlow.batch.begin();
         
         FreeFlow.batch.draw(FotoFondo, 0, 0, grosorPantalla, alturaPantalla); 
         FreeFlow.batch.draw(TituloFreeFlow,x,y, grosorTextura,alturaTextura);
-        iniciarBoton(botonLogin);
-        iniciarBoton(botonCrearPlayer);
-        iniciarBoton(botonSalir);
+        for(Boton boton : botones){
+            boton.dibujar(FreeFlow.batch);
+        }
         
         FreeFlow.batch.end();
-    }
-    public void iniciarBoton(Texture texture){
-        botonGrosor = texture.getWidth()/2;
-        botonAltura = texture.getHeight()/2;
-        float botonX = (grosorPantalla - botonGrosor)/2;
-        float botonY = y-botonAltura - 40;
-        y = botonY;
-        
-        FreeFlow.batch.draw(texture, botonX, botonY, botonGrosor,botonAltura);
-       
     }
     
     public void logica(){
@@ -87,19 +92,25 @@ public class PantallaPrincipal implements Screen{
          float tocadoX = Gdx.input.getX();
          float tocadoY = Gdx.graphics.getHeight() -Gdx.input.getY();
          
-         float tempY = alturaPantalla - 40; 
-         float loginY = tempY - botonLogin.getHeight() / 2 - 40;
-         float crearY = loginY - botonCrearPlayer.getHeight() / 2 - 40;
-         float salirY = crearY - botonSalir.getHeight() / 2 - 40; 
-                 
-         if (botonTocado(botonLogin, tocadoX, tocadoY, loginY)) {
-        } else if (botonTocado(botonCrearPlayer, tocadoX, tocadoY, crearY)) {
-        } else if (botonTocado(botonSalir, tocadoX, tocadoY, salirY)) {
-            System.out.println("Boton salir tocado");
-            Gdx.app.exit();
+         for(Boton boton : botones){
+             if(boton.esTocado(tocadoX, tocadoY)){
+                 if(boton == botonSalir){
+                     System.out.println("Boton salir");
+                     Gdx.app.exit();
+                 }
+                 else if(boton == botonLogin){
+                     System.out.println("Boton login");
+                     FreeFlow.setScreen(new PantallaLogin(FreeFlow));
+                 }
+                 else if(boton == botonCrear){
+                     System.out.println("Boton crear");
+                 }
+             }
+         }
+        
         }
     }
-}
+    
     
     public boolean botonTocado(Texture texture, float tocadoX, float tocadoY, float botonY){
         botonGrosor = texture.getWidth()/2;
@@ -131,6 +142,11 @@ public class PantallaPrincipal implements Screen{
     @Override
     public void dispose() {
         FotoFondo.dispose();
+        TituloFreeFlow.dispose();
+        for (Boton boton : botones) {
+            boton.dispose();
+        }
+        music.dispose();
     }
     
     
