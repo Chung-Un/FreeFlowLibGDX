@@ -104,6 +104,7 @@ public class PantallaPrincipal implements Screen{
                  }
                  else if(boton == botonCrear){
                      System.out.println("Boton crear");
+                     FreeFlow.setScreen(new PantallaCrear(FreeFlow));
                  }
              }
          }
@@ -137,6 +138,7 @@ public class PantallaPrincipal implements Screen{
 
     @Override
     public void hide() {
+        music.stop();
     }
 
     @Override

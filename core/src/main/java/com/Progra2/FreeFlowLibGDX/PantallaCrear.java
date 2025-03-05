@@ -6,7 +6,6 @@ package com.Progra2.FreeFlowLibGDX;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -25,20 +24,20 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
  *
  * @author chung
  */
-public class PantallaLogin implements Screen{
+public class PantallaCrear implements Screen{
     private Stage stage;
     private Skin skin;
     private TextField fieldUser, fieldPassword;
-    private ImageButton btnLogin;
+    private ImageButton btnCrear;
     private ImageButton btnRegresar;
     private FreeFlow FreeFlow;
     private Texture fondo;
     private Boton botonRegresar;
-    private Texture tituloLogin;
+    private Texture tituloCrear;
     static float grosorPantalla,alturaPantalla,y;
     protected String user,password;
     
-    public PantallaLogin(FreeFlow FreeFlow) {
+    public PantallaCrear(FreeFlow FreeFlow) {
         this.FreeFlow = FreeFlow;
         stage = new Stage(new ScreenViewport());
         skin = new Skin (Gdx.files.internal("uiskin.json"));
@@ -48,8 +47,8 @@ public class PantallaLogin implements Screen{
         stage.addActor(table);
         
         fondo = new Texture("FotoFondo.png");
-        Texture texturaLogin = new Texture("login.png");
-        Texture texturaBtnLogin = new Texture("botonlogin.png");
+        tituloCrear= new Texture("crearplayer.png");
+        Texture texturaBtnLogin = new Texture("botoncrear.png");
         Texture texturaRegresar = new Texture("botonBack.png");
         
         ImageButton.ImageButtonStyle botonLoginStyle = new ImageButton.ImageButtonStyle();
@@ -58,7 +57,7 @@ public class PantallaLogin implements Screen{
         ImageButton.ImageButtonStyle botonRegresarStyle = new ImageButton.ImageButtonStyle();
         botonRegresarStyle.imageUp = new TextureRegionDrawable(new TextureRegion(texturaRegresar));
         
-        btnLogin = new ImageButton(botonLoginStyle);
+        btnCrear = new ImageButton(botonLoginStyle);
         btnRegresar = new ImageButton(botonRegresarStyle);
         
         fieldUser = new TextField("" ,skin);
@@ -71,16 +70,17 @@ public class PantallaLogin implements Screen{
         table.add(fieldUser).width(200).padTop(180).padBottom(30).row();
         table.add(new Label("Password: ",skin)).padRight(30);
         table.add(fieldPassword).width(200).row();
-        table.add(btnLogin).colspan(2).width(150).row();
+        table.add(btnCrear).colspan(2).width(150).row();
         table.add(btnRegresar).colspan(2).width(50);
         
               
-        tituloLogin = new Texture("login.png");
+        botonRegresar = new Boton(new Texture("botonBack.png"), 10, Gdx.graphics.getHeight() - 60, 50, 50,false , 0);
+        tituloCrear = new Texture("crearplayer.png");
         
-        btnLogin.addListener(new ClickListener() {
+        btnCrear.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("login boton");
+                System.out.println("crear boton");
                 user = fieldUser.getText();
                 password = fieldPassword.getText();
                 fieldUser.setText("");
@@ -93,8 +93,7 @@ public class PantallaLogin implements Screen{
             public void clicked(InputEvent event, float x, float y) {
                 FreeFlow.setScreen(new PantallaPrincipal(FreeFlow));
             }
-        });
-    }
+        });}
     
     @Override
     public void show() {
@@ -114,14 +113,14 @@ public class PantallaLogin implements Screen{
     public void dibujar(){
         grosorPantalla = Gdx.graphics.getWidth();
         alturaPantalla = Gdx.graphics.getHeight();
-        float grosorTextura = tituloLogin.getWidth()/2;
-        float alturaTextura = tituloLogin.getHeight()/2;
+        float grosorTextura = tituloCrear.getWidth()/2;
+        float alturaTextura = tituloCrear.getHeight()/2;
         float x = (grosorPantalla -grosorTextura)/2;
         y = (alturaPantalla-alturaTextura)-40;
         
         FreeFlow.batch.begin();
         FreeFlow.batch.draw(fondo, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        FreeFlow.batch.draw(tituloLogin, x, y, grosorTextura, alturaTextura);
+        FreeFlow.batch.draw(tituloCrear, x, y, grosorTextura, alturaTextura);
         FreeFlow.batch.end();
     }
     
