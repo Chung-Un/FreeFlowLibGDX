@@ -126,5 +126,11 @@ public class Usuario implements Serializable {
     public List<Partida> getHistorialPartidas() { return historialPartidas; }
     public String getRutaAvatar() { return rutaAvatar; }
     
-    
+    public class FlowFreeMecanica{
+        private int tamanoTablero;
+        private Casilla[][] tablero;
+        private List<Par>pares;
+        private Map<Punto>, Par mapaPuntos;
+        
+    }
 }
