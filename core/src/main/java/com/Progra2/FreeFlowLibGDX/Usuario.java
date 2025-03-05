@@ -14,19 +14,20 @@ import java.util.List;
  * @author Nadiesda Fuentes
  */
 public class Usuario implements Serializable {
-    // Atributos de serialización
     private static final long serialVersionUID = 1L;
 
     // Datos de usuario requeridos
-    private String nombreUsuario; // Identificador único
-    private String contrasena; // Contraseña (idealmente encriptada)
+    private String nombreUsuario; 
+    private String contrasena; 
     private String nombreCompleto;
     private LocalDate fechaRegistro;
     private LocalDateTime ultimaSesion;
-    private String rutaAvatar; // Ruta al archivo de imagen de avatar
+    private int progreso;
+    private int 
+    private String rutaAvatar; 
 
     // Estadísticas de juego
-    private int tiempoTotalJugado; // En minutos
+    private int tiempoTotalJugado; 
     private int nivelesCompletados;
     private int puntajeTotal;
     private List<Partida> historialPartidas;
@@ -126,11 +127,5 @@ public class Usuario implements Serializable {
     public List<Partida> getHistorialPartidas() { return historialPartidas; }
     public String getRutaAvatar() { return rutaAvatar; }
     
-    public class FlowFreeMecanica{
-        private int tamanoTablero;
-        private Casilla[][] tablero;
-        private List<Par>pares;
-        private Map<Punto>, Par mapaPuntos;
-        
-    }
+
 }
