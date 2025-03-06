@@ -126,6 +126,6 @@ public class Usuario implements Serializable {
     public int getPuntajeTotal() { return puntajeTotal; }
     public List<Partida> getHistorialPartidas() { return historialPartidas; }
     public String getRutaAvatar() { return rutaAvatar; }
-    
+    public
 
 }
