@@ -4,10 +4,11 @@
  */
 package com.Progra2.FreeFlowLibGDX;
 
+
 /**
  *
  * @author Nadiesda Fuentes
  */
-public class Nivel {
+public class GameScreen {
     
 }
