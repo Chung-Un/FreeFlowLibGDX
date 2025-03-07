@@ -8,8 +8,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 /**
  *
@@ -23,24 +31,36 @@ public class Nivel1 extends Nivel {
     private Texture texturaGreen;
     private ShapeRenderer renderer;
     private SpriteBatch batch;
+    private Punto puntoSeleccionado;
+    private Table table;
+    private float sizeCelda;
+    private float offSetX, offSetY;
     
-    public Nivel1(int sizeGrid, float tiempoLimite, Usuario jugador){
+    public Nivel1(int sizeGrid, float tiempoLimite, Jugador jugador){
         super(sizeGrid,tiempoLimite, jugador);
         renderer = new ShapeRenderer();
         batch = new SpriteBatch();
+        table = new Table();
+        table.center();
+        stage.addActor(table);
         texturaPink = new Texture("pinkdot.png");
         texturaCyan = new Texture("cyandot.png");
         texturaOrange = new Texture("orangedot.png");
         texturaYellow = new Texture("yellowdot.png");
         texturaGreen = new Texture("greendot.png");
+        sizeCelda = 100;
+        offSetX = (Gdx.graphics.getWidth() - sizeCelda * 5) / 2;
+        offSetY = (Gdx.graphics.getHeight() - sizeCelda * 5) / 2;
+
+
     }
 
     @Override
     public void inicializar() {
-        puntos.add(new Punto(0,0, Color.PINK));
+        puntos.add(new Punto(0,0, Color.PINK)); 
         puntos.add(new Punto(1,4, Color.PINK));
-        puntos.add(new Punto(2,3, Color.ORANGE));
-        puntos.add(new Punto(1,4, Color.ORANGE));
+        puntos.add(new Punto(1,3, Color.ORANGE));
+        puntos.add(new Punto(2,0, Color.ORANGE));
         puntos.add(new Punto(2,1, Color.GREEN));
         puntos.add(new Punto(2,4, Color.GREEN));
         puntos.add(new Punto(4,0, Color.YELLOW));
@@ -48,10 +68,67 @@ public class Nivel1 extends Nivel {
         puntos.add(new Punto(4,1,Color.CYAN));
         puntos.add(new Punto(3,4,Color.CYAN));
         
-        iniciarHiloTiempo();
-        iniciarHiloVerificacionConexiones();
+//        iniciarHiloTiempo();
+//        iniciarHiloVerificacionConexiones();
     }
+    
+    public void crearDotBotones(){
+        
+      
+        for (Punto punto : puntos){
+            float x = offSetX + punto.getX() * sizeCelda;
+            float y = offSetY + (sizeCelda * (sizeGrid - 1 - punto.getY())); 
 
+
+            
+        ImageButton.ImageButtonStyle btnDotStyle = new ImageButton.ImageButtonStyle();
+        
+        if(punto.getColor().equals(Color.PINK)){
+            btnDotStyle.imageUp = new TextureRegionDrawable(new TextureRegion(texturaPink));
+        }
+        else if(punto.getColor().equals(Color.ORANGE)){
+            btnDotStyle.imageUp = new TextureRegionDrawable(new TextureRegion(texturaOrange));
+        }
+        else if(punto.getColor().equals(Color.CYAN)){
+           btnDotStyle.imageUp = new TextureRegionDrawable(new TextureRegion(texturaCyan));
+        }
+        else if(punto.getColor().equals(Color.GREEN)){
+           btnDotStyle.imageUp = new TextureRegionDrawable(new TextureRegion(texturaGreen));
+        }
+        else if(punto.getColor().equals(Color.YELLOW)){
+           btnDotStyle.imageUp = new TextureRegionDrawable(new TextureRegion(texturaYellow));
+        }
+        
+        ImageButton btnDot = new ImageButton(btnDotStyle);
+        btnDot.setSize(sizeCelda, sizeCelda);
+        btnDot.setPosition(x,y);
+        
+        btnDot.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        seleccionDots(punto.getX(), punto.getY(), punto.getColor());
+                    }
+                });
+        
+        stage.addActor(btnDot);
+        }
+        
+    }
+    
+    public void seleccionDots(int fila, int col, Color color){
+        
+        if(puntoSeleccionado == null){
+            puntoSeleccionado = new Punto(fila, col, color);
+            System.out.println("Seleccionado dot en row(" + fila + ") y col{" + col + ")");
+        } else{
+            System.out.println("Intenta conectar");
+            //logica de conxeion
+            puntoSeleccionado = null;
+        }
+    
+    }
+    
+    
     @Override
     public void actualizar(float delta) {
         tiempoRestante-=delta;
@@ -69,56 +146,23 @@ public class Nivel1 extends Nivel {
 
     @Override
     public void dibujar() {
-        renderer.begin(ShapeRenderer.ShapeType.Line);
-        renderer.setColor(Color.WHITE);
-        float sizeCelda = Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())/sizeGrid;
-        
-        for(int i = 0; i< sizeGrid; i++){
-            renderer.line(i*sizeCelda, 0, i * sizeCelda, Gdx.graphics.getHeight()); //lineas verticales
-            renderer.line(0, i*sizeCelda,Gdx.graphics.getWidth(), i * sizeCelda); //lineas horizontales
-        }
-        
-        renderer.end();
         
         batch.begin();
+        renderer.setAutoShapeType(true);
+        renderer.begin(ShapeRenderer.ShapeType.Line);
         
-        float offsetX = (Gdx.graphics.getWidth() - sizeGrid * sizeCelda) / 2;
-        float offsetY = (Gdx.graphics.getHeight() - sizeGrid * sizeCelda) / 2;
-
-        for(Punto punto: puntos){
-            if(punto.getColor().equals(Color.PINK)){
-                batch.draw(texturaPink, offsetX + punto.getX() * sizeCelda, offsetY + punto.getY() * sizeCelda, sizeCelda * 0.8f, sizeCelda * 0.8f);
-            }
-            else if(punto.getColor().equals(Color.ORANGE)){
-                batch.draw(texturaOrange, offsetX + punto.getX() * sizeCelda, offsetY + punto.getY() * sizeCelda, sizeCelda * 0.8f, sizeCelda * 0.8f);
-            }
-            else if(punto.getColor().equals(Color.CYAN)){
-               batch.draw(texturaCyan, offsetX + punto.getX() * sizeCelda, offsetY + punto.getY() * sizeCelda, sizeCelda * 0.8f, sizeCelda * 0.8f); 
-            }
-            else if(punto.getColor().equals(Color.GREEN)){
-                batch.draw(texturaGreen, offsetX + punto.getX() * sizeCelda, offsetY + punto.getY() * sizeCelda, sizeCelda * 0.8f, sizeCelda * 0.8f);
-            }
-            else if(punto.getColor().equals(Color.YELLOW)){
-                batch.draw(texturaYellow, offsetX + punto.getX() * sizeCelda, offsetY + punto.getY() * sizeCelda, sizeCelda * 0.8f, sizeCelda * 0.8f);
-            }
+        for( int i =0 ; i<=5 ; i++){
+            renderer.line( offSetX + i * sizeCelda, offSetY, offSetX + i * sizeCelda, offSetY + sizeCelda * 5);
+            renderer.line(offSetX, offSetY + i * sizeCelda,  offSetX + sizeCelda * 5, offSetY + i * sizeCelda);
         }
         
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
-        for (Conexion conexion : conexiones) {
-            Punto inicio = conexion.getInicio();
-            Punto fin = conexion.getFin();
-            renderer.setColor(inicio.getColor());
-
-            //calcular el centro de cada celda
-            float x1 = inicio.getX() * sizeCelda + sizeCelda / 2;
-            float y1 = inicio.getY() * sizeCelda + sizeCelda / 2;
-            float x2 = fin.getX() * sizeCelda + sizeCelda / 2;
-            float y2 = fin.getY() * sizeCelda + sizeCelda / 2;
-
-            renderer.rectLine(x1, y1, x2, y2, 10); 
-        }
-        batch.end();
         renderer.end();
+        
+        renderer.begin();
+        crearDotBotones();
+        renderer.end();
+        batch.end();
+
     }
 
     @Override

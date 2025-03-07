@@ -15,6 +15,8 @@ import java.util.Calendar;
 public class Jugador implements Serializable{
     private String username, password;
     private int nivelesCompletados;
+
+    
     private Calendar fechaRegistro;
     private Calendar ultimaFechaIngreso;
     private ArrayList<Double> tiemposPorNivel;
@@ -36,6 +38,10 @@ public class Jugador implements Serializable{
     
     public void actualizarUltimaFechaIngreso(){
         ultimaFechaIngreso = Calendar.getInstance();
+    }
+    
+    public int getNivelesCompletados() {
+        return nivelesCompletados;
     }
     
     }

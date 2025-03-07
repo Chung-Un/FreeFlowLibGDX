@@ -42,7 +42,7 @@ public class PantallaMapa implements Screen{
     private Texture texturanivelCerrado;
     private Texture texturanivelAbierto;
     private Texture texturaRegresar;
-    private Usuario usuario = new Usuario("juan","juan","12345");//TESTTT BORRAR LUEGO
+    private Jugador usuario = new Jugador("juan","12345");//TESTTT BORRAR LUEGO
     private ArrayList<ImageButton> botonesNiveles;
     private Music music;
     

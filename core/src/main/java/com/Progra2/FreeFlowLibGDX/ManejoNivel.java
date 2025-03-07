@@ -13,9 +13,9 @@ import java.util.ArrayList;
 public class ManejoNivel {
     private ArrayList<Nivel> niveles;
     private int nivelActual;
-    private Usuario jugador;
+    private Jugador jugador;
     
-    public ManejoNivel(Usuario jugador){
+    public ManejoNivel(Jugador jugador){
         this.jugador = jugador;
         niveles = new ArrayList();
         niveles.add(new Nivel1(5,45,jugador));

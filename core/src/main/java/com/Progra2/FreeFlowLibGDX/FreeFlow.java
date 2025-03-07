@@ -11,7 +11,7 @@ public class FreeFlow extends Game {
     @Override
     public void create() {
         batch = new SpriteBatch();
-        this.setScreen(new PantallaPrincipal(this));
+        this.setScreen(new PantallaMapa(this));
 
     }
 

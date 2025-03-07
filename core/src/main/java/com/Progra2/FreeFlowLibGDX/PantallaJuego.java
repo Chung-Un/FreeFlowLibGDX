@@ -19,7 +19,7 @@ public class PantallaJuego implements Screen{
     private FreeFlow FlowFree;
     private SpriteBatch batch;
     
-    public PantallaJuego(FreeFlow FlowFree, Usuario jugador){
+    public PantallaJuego(FreeFlow FlowFree, Jugador jugador){
         manejoNivel = new ManejoNivel(jugador);
         nivelActual = manejoNivel.getNivelActual();
         nivelActual.inicializar();
@@ -36,6 +36,9 @@ public class PantallaJuego implements Screen{
         nivelActual.actualizar(delta);
         nivelActual.dibujar();
         batch.end();
+        
+        nivelActual.getStage().act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f)); // Update the stage actions
+        nivelActual.getStage().draw();
         
         if(nivelActual.verificarCompletacion()){
             manejoNivel.avanzarNivel();

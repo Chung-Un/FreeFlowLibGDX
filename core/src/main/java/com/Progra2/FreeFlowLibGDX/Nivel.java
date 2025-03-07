@@ -5,6 +5,9 @@
 package com.Progra2.FreeFlowLibGDX;
 
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +15,7 @@ import java.util.ArrayList;
  * @author Nadiesda Fuentes
  */
 public abstract class Nivel{
-    protected Usuario jugador;
+    protected Jugador jugador;
     protected int sizeGrid;
     protected float tiempoRestante;
     protected boolean nivelCompletado;
@@ -23,9 +26,10 @@ public abstract class Nivel{
     private boolean verificandoConexiones;
     private float y;
     private FreeFlow FlowFree;
+    protected Stage stage;
     
     
-    public Nivel(int sizeGrid, float tiempoLimite, Usuario jugador){
+    public Nivel(int sizeGrid, float tiempoLimite, Jugador jugador){
         this.sizeGrid = sizeGrid;  
         this.tiempoRestante = tiempoLimite;
         this.nivelCompletado = false;
@@ -33,6 +37,9 @@ public abstract class Nivel{
         this.conexiones = new ArrayList();
         this.verificandoConexiones = false;
         this.jugador = jugador;
+        stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage); 
+
     }
     
     public abstract void inicializar();
@@ -110,9 +117,11 @@ public abstract class Nivel{
     public void registrarCompletado(int nivelJugado){
         if(nivelCompletado){
             int tiempoJugado = (int) tiempoRestante;
-            Usuario.Partida partida = new Usuario.Partida(nivelJugado,(int) tiempoJugado, (int) tiempoRestante);
-            jugador.registrarPartida(partida);
         }
+    }
+    
+    public Stage getStage(){
+        return stage;
     }
    
 }
