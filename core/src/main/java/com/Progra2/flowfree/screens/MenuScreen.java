@@ -16,8 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mijuego.flowfree.flowfreegame.FlowFreeGame;
-import com.mijuego.flowfree.model.Usuario;
+import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
+import com.Progra2.flowfree.model.Usuario;
 
 /**
  *
@@ -115,3 +115,4 @@ public class MenuScreen implements Screen {
         skin.dispose();
     }
 }
+

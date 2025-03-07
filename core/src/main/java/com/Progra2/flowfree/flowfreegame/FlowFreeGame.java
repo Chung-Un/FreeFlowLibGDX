@@ -5,7 +5,7 @@
 package com.Progra2.flowfree.flowfreegame;
 
 import com.badlogic.gdx.Game;
-import com.mijuego.flowfree.screens.MenuScreen;
+import com.Progra2.flowfree.screens.MenuScreen;
 /**
  *
  * @author Nadiesda Fuentes
