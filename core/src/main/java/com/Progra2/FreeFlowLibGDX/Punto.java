@@ -11,18 +11,26 @@ import com.badlogic.gdx.graphics.Color;
  * @author chung
  */
 public class Punto {
-    private int x,y;
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
+    private int col,fila;
     private Color color;
-    private boolean conectado;
+    protected boolean conectado;
 
+    public Punto(int col, int fila, Color color){
+        this.col = col;
+        this.fila =fila;
+        this.color = color;
+        this.conectado = false;
+    }
+    
+    
+    public int getCol() {
+        return col;
+    }
+
+    public int getFila() {
+        return fila;
+    }
+    
     public boolean isConectado() {
         return conectado;
     }
@@ -30,14 +38,7 @@ public class Punto {
     public void setConectado(boolean conectado) {
         this.conectado = conectado;
     }
-    
-    public Punto(int x, int y, Color color){
-        this.x = x;
-        this.y =y;
-        this.color = color;
-        this.conectado = false;
-    }
-    
+   
     public boolean estaConectado(){
         return conectado;
     }

@@ -4,42 +4,40 @@
  */
 package com.Progra2.FreeFlowLibGDX;
 
-
 import com.badlogic.gdx.graphics.Color;
 
 /**
  *
  * @author chung
  */
-public class Nivel1 extends Nivel {
-   
-    
-    public Nivel1(int sizeGrid, float tiempoLimite, Jugador jugador, FreeFlow FlowFree) {
-        super(sizeGrid, tiempoLimite, jugador,FlowFree,90);
-        this.grid = new int[sizeGrid][sizeGrid];
-       
+public class Nivel2 extends Nivel{
+
+    public Nivel2(int sizeGrid, double tiempoLimite, Jugador jugador, FreeFlow FlowFree) {
+        super(sizeGrid, tiempoLimite, jugador, FlowFree,80);
+        this.grid= new int[sizeGrid][sizeGrid];
     }
+    
 
     @Override
     public void inicializar() {
         this.calcularOffsets();
-        System.out.println("Inciando el nivel 1");
-        //el grid se resettea
+        System.out.println("Inicializando nivel 2");
         for (int i = 0; i < sizeGrid; i++) {
             for (int j = 0; j < sizeGrid; j++) {
                 grid[i][j] = 0; 
             }
         }
         
-        puntos.add(new Punto(0, 0, Color.PINK));
-        puntos.add(new Punto(1, 4, Color.PINK));
-        puntos.add(new Punto(1, 3, Color.ORANGE));
-        puntos.add(new Punto(2, 0, Color.ORANGE));
-        puntos.add(new Punto(2, 1, Color.GREEN));
-        puntos.add(new Punto(2, 4, Color.GREEN));
-        puntos.add(new Punto(4, 0, Color.YELLOW));
-        puntos.add(new Punto(3, 3, Color.YELLOW));
-        puntos.add(new Punto(4, 1, Color.CYAN));
+        puntos.add(new Punto(0, 3, Color.PINK));
+        puntos.add(new Punto(5, 0, Color
+                .PINK));
+        puntos.add(new Punto(1, 2, Color.ORANGE));
+        puntos.add(new Punto(3, 5, Color.ORANGE));
+        puntos.add(new Punto(0, 4, Color.GREEN));
+        puntos.add(new Punto(3, 3, Color.GREEN));
+        puntos.add(new Punto(2, 2, Color.PURPLE));
+        puntos.add(new Punto(4, 4, Color.PURPLE));
+        puntos.add(new Punto(0, 5, Color.CYAN));
         puntos.add(new Punto(3, 4, Color.CYAN));
         
         for(Punto punto : puntos){
@@ -50,7 +48,12 @@ public class Nivel1 extends Nivel {
         }
 
         //Debug
-        imprimirGrid();
+        for (int i = 0; i < sizeGrid; i++) {
+        for (int j = 0; j < sizeGrid; j++) {
+            System.out.print(grid[i][j] + " ");
+        }
+        System.out.println();
+        }
         iniciarHiloTiempo();
         iniciarHiloColisiones();
     }
@@ -62,14 +65,14 @@ public class Nivel1 extends Nivel {
         batch.dispose();
         texturaPink.dispose();
         texturaCyan.dispose();
-        texturaYellow.dispose();
-        texturaGreen.dispose();
         texturaOrange.dispose();
+        texturaGreen.dispose();
+        texturaPurple.dispose();
         detenerHiloTiempo();
         detenerHiloColisiones();
     }
 
-    @Override
+   @Override
     public boolean keyDown(int i) {
         return false;
     }
@@ -99,7 +102,6 @@ public class Nivel1 extends Nivel {
     public boolean scrolled(float f, float f1) {
         return false;
     }
-    
-    
+
     
 }

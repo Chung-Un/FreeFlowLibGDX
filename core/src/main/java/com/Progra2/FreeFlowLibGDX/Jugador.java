@@ -14,12 +14,12 @@ import java.util.Calendar;
  */
 public class Jugador implements Serializable{
     private String username, password;
-    private int nivelesCompletados;
+    protected int nivelesCompletados;
 
     
     private Calendar fechaRegistro;
     private Calendar ultimaFechaIngreso;
-    private ArrayList<Double> tiemposPorNivel;
+    protected ArrayList<Double> tiemposPorNivel;
     
     public Jugador(String username, String password){
         this.username = username;
@@ -28,6 +28,10 @@ public class Jugador implements Serializable{
         nivelesCompletados = 0;
         ultimaFechaIngreso = Calendar.getInstance();
         tiemposPorNivel = new ArrayList();
+        
+        for (int i = 0; i < 5; i++) { 
+            tiemposPorNivel.add(0.0);
+        }
     }
     
     public void guardarUsuario(){}

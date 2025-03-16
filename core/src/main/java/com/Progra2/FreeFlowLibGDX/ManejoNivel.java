@@ -11,28 +11,37 @@ import java.util.ArrayList;
  * @author chung
  */
 public class ManejoNivel {
-    private ArrayList<Nivel> niveles;
-    private int nivelActual;
+    private static ArrayList<Nivel> niveles;
+    private static int nivelActual;
     private Jugador jugador;
+    private FreeFlow FlowFree;
     
-    public ManejoNivel(Jugador jugador){
+    
+    public ManejoNivel(Jugador jugador, FreeFlow FlowFree, int nivel){
         this.jugador = jugador;
+        this.FlowFree = FlowFree;
         niveles = new ArrayList();
-        niveles.add(new Nivel1(5,45,jugador));
-        nivelActual=0;
+        niveles.add(new Nivel1(5,35,jugador,FlowFree));
+        niveles.add(new Nivel2(6,45,jugador,FlowFree));
+        niveles.add(new Nivel3(6,55,jugador,FlowFree));
+        niveles.add(new Nivel4(8,60,jugador,FlowFree));
+        niveles.add(new Nivel5(10,100,jugador,FlowFree));
+        nivelActual=nivel;
     }
     
     public Nivel getNivelActual(){
         return niveles.get(nivelActual);
     }
     
-    public void avanzarNivel(){
-        if (nivelActual < niveles.size() - 1) {
-            nivelActual++;
-        } else {
-            //todos los niveles ya se completaron
-        }
+    public  void avanzarNivel() {
+    if (nivelActual < niveles.size() - 1) {
+        nivelActual++;
+        System.out.println("Advanced to Level " + nivelActual + " with Grid Size: " + getNivelActual().sizeGrid);
+    } else {
+        System.out.println("All levels completed.");
     }
+}
+
     
     public void reiniciarNivel() {
         getNivelActual().reiniciarNivel();

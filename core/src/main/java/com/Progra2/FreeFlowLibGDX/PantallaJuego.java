@@ -15,12 +15,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class PantallaJuego implements Screen{
     private Nivel nivelActual;
-    private ManejoNivel manejoNivel;
+    public static  ManejoNivel manejoNivel;
     private FreeFlow FlowFree;
     private SpriteBatch batch;
+    protected static Conexion conexionHovered = null;
     
-    public PantallaJuego(FreeFlow FlowFree, Jugador jugador){
-        manejoNivel = new ManejoNivel(jugador);
+    public PantallaJuego(FreeFlow FlowFree, Jugador jugador, int nivel){
+        this.FlowFree = FlowFree;
+        manejoNivel = new ManejoNivel(jugador, FlowFree,nivel);
         nivelActual = manejoNivel.getNivelActual();
         nivelActual.inicializar();
         batch = new SpriteBatch();
@@ -32,18 +34,15 @@ public class PantallaJuego implements Screen{
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
-        batch.begin();
+        int mouseX = Gdx.input.getX();
+        int mouseY = Gdx.input.getY();
+        conexionHovered = Nivel.conexionHovered(mouseX, mouseY);
         nivelActual.actualizar(delta);
         nivelActual.dibujar();
-        batch.end();
-        
-        nivelActual.getStage().act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f)); // Update the stage actions
-        nivelActual.getStage().draw();
         
         if(nivelActual.verificarCompletacion()){
             manejoNivel.avanzarNivel();
             nivelActual = manejoNivel.getNivelActual();
-            nivelActual.inicializar();
         }
     }
 

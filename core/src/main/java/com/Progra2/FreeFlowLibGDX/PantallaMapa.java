@@ -42,14 +42,16 @@ public class PantallaMapa implements Screen{
     private Texture texturanivelCerrado;
     private Texture texturanivelAbierto;
     private Texture texturaRegresar;
-    private Jugador usuario = new Jugador("juan","12345");//TESTTT BORRAR LUEGO
     private ArrayList<ImageButton> botonesNiveles;
     private Music music;
+    private ImageButton.ImageButtonStyle nivelCerradoBtnStyle ;
+    private ImageButton.ImageButtonStyle nivelAbiertoBtnStyle; 
+    private Jugador jugador;
     
-    public PantallaMapa(FreeFlow FlowFree){
+    public PantallaMapa(FreeFlow FlowFree, Jugador jugador){
         this.FlowFree = FlowFree;
         stage = new Stage(new ScreenViewport());
-        
+        this.jugador = jugador;
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
@@ -57,10 +59,10 @@ public class PantallaMapa implements Screen{
         texturanivelAbierto = new Texture("candadoAbierto.png");
         texturaRegresar = new Texture("botonBack.png");
         
-        ImageButton.ImageButtonStyle nivelCerradoBtnStyle = new ImageButton.ImageButtonStyle();
+        nivelCerradoBtnStyle = new ImageButton.ImageButtonStyle();
         nivelCerradoBtnStyle.imageUp = new TextureRegionDrawable(new TextureRegion(texturanivelCerrado));
         
-        ImageButton.ImageButtonStyle nivelAbiertoBtnStyle = new ImageButton.ImageButtonStyle();
+        nivelAbiertoBtnStyle = new ImageButton.ImageButtonStyle();
         nivelAbiertoBtnStyle.imageUp = new TextureRegionDrawable(new TextureRegion(texturanivelAbierto));
         
         ImageButton.ImageButtonStyle btnRegresarStyle= new ImageButton.ImageButtonStyle();
@@ -84,14 +86,7 @@ public class PantallaMapa implements Screen{
         botonesNiveles.add(btnNivel5);
         
         skin = new Skin(Gdx.files.internal("uiskin.json"));
-        
-        if(usuario.getNivelesCompletados()>0){
-            for(int i =0 ; i< usuario.getNivelesCompletados() && i < botonesNiveles.size(); i++){
-                botonesNiveles.get(i).setStyle(nivelAbiertoBtnStyle);
-                botonesNiveles.get(i).setDisabled(false);
-            }
-        }
-        
+       
         float sizeBotones=150;
         table.left().top();
         table.add(btnNivel1).size(sizeBotones).padTop(150).padRight(10);
@@ -119,20 +114,63 @@ public class PantallaMapa implements Screen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 FlowFree.setScreen(new PantallaPrincipal(FlowFree));
+                dispose();
             }
         });
         
-        btnNivel1.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                FlowFree.setScreen(new PantallaJuego(FlowFree,usuario));
-            }
-        });
-        
+//        btnNivel1.addListener(new ClickListener() {
+//        @Override
+//        public void clicked(InputEvent event, float x, float y) {
+//            System.out.println("Starting Nivel1...");
+//            FlowFree.setScreen(new PantallaJuego(FlowFree, jugador,0));
+//            dispose();
+//        }
+//        });
+//
+//    btnNivel2.addListener(new ClickListener() {
+//        @Override
+//        public void clicked(InputEvent event, float x, float y) {
+//            System.out.println("Starting Nivel2...");
+//            FlowFree.setScreen(new PantallaJuego(FlowFree, jugador,1));
+//            dispose();
+//        }
+//        });
+//    
+//    btnNivel3.addListener(new ClickListener() {
+//        @Override
+//        public void clicked(InputEvent event, float x, float y) {
+//            System.out.println("Starting Nivel3...");
+//            FlowFree.setScreen(new PantallaJuego(FlowFree, jugador,2));
+//            dispose();
+//        }
+//        });
+//    
+//    btnNivel4.addListener(new ClickListener() {
+//        @Override
+//        public void clicked(InputEvent event, float x, float y) {
+//            System.out.println("Starting Nivel3...");
+//            FlowFree.setScreen(new PantallaJuego(FlowFree, jugador,3));
+//            dispose();
+//        }
+//        });
+//    
+//    btnNivel5.addListener(new ClickListener() {
+//        @Override
+//        public void clicked(InputEvent event, float x, float y) {
+//            System.out.println("Starting Nivel3...");
+//            FlowFree.setScreen(new PantallaJuego(FlowFree, jugador,4));
+//            dispose();
+//        }
+//        });
     }
+    
+    
+    
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage); 
+        System.out.println("Pantalla mapa mostrada");
+        actualizarBotonesNiveles();
     }
 
     @Override
@@ -185,6 +223,48 @@ public class PantallaMapa implements Screen{
         }
         music.dispose();
     }
+    
+    public void actualizarBotonesNiveles() {
+    System.out.println("Llamando actualizar botones niveles...");
+    System.out.println("Niveles completados: " + jugador.getNivelesCompletados());
+    
+    for (int i = 0; i < botonesNiveles.size(); i++) {
+        ImageButton boton = botonesNiveles.get(i);
+        
+        // The first level should always be open
+        if (i == 0 || i <= jugador.getNivelesCompletados()) {
+            boton.setStyle(nivelAbiertoBtnStyle);
+            boton.setDisabled(false);
+            System.out.println("Actualizar botones");
+            System.out.println(i);
+            
+            // Clear existing listeners (optional, if needed)
+            boton.clearListeners();
+            
+            // Debug: Print the number of listeners
+            System.out.println("Número de listeners: " + boton.getListeners().size);
+            
+            if (boton.getListeners().isEmpty()) {
+                System.out.println("Entro: No hay listeners");
+                final int nivel = i ; 
+                boton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        System.out.println("Starting Nivel " + nivel + "...");
+                        FlowFree.setScreen(new PantallaJuego(FlowFree, jugador, nivel));
+                        dispose();
+                    }
+                });
+                System.out.println("Listener agregado para Nivel " + (i + 1));
+            } else {
+                System.out.println("No entro: Ya hay listeners");
+            }
+        } else {
+            boton.setStyle(nivelCerradoBtnStyle);
+            boton.setDisabled(true);
+        }
+    }
+}
     }
     
 
