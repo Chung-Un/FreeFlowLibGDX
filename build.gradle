@@ -45,30 +45,31 @@ configure(subprojects) {
 
   // Task to automatically generate an asset list from the "assets" folder
   tasks.register('generateAssetList') {
-    inputs.dir("${project.rootDir}/assets/")
-    File assetsFolder = new File("${project.rootDir}/assets/")
-    File assetsFile = new File(assetsFolder, "assets.txt")
-
-    // Ensure old file is deleted before generating a new one
-    assetsFile.delete()
-
-    // Collect and append asset file paths
-    fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.sort().each {
-      assetsFile.append(it + "\n")
+        doLast {
+            File assetsFolder = file("${project.rootDir}/assets/")
+            if (!assetsFolder.exists()) {
+                println "Warning: No assets folder found!"
+                return
+            }
+            File assetsFile = new File(assetsFolder, "assets.txt")
+            assetsFile.delete() // Asegurar que no haya duplicados
+            fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.sort().each {
+                assetsFile.append(it + "\n")
+            }
+        }
     }
-  }
   processResources.dependsOn 'generateAssetList'
 
     tasks.withType(ProcessResources) {
     outputs.upToDateWhen { false }
 }
 
-
-  compileJava {
-    options.incremental = true
-  }
+tasks.withType(JavaCompile).configureEach {
+        options.incremental = true
+    }
 }
 
+ 
 subprojects {
   version = "$projectVersion"
   ext.appName = 'FreeFlowLibGDX'
@@ -85,6 +86,17 @@ subprojects {
 
 eclipse.project.name = 'FreeFlowLibGDX' + '-parent'
 
+tasks.register('forceDeleteBuildDir') {
+    doLast {
+        def buildDir = file("${rootProject.buildDir}")
+        if (buildDir.exists()) {
+            println "Attempting to delete build directory..."
+            buildDir.deleteDir()
+            println "Build directory deleted successfully."
+        }
+    }
+}
+
 // Force clean task to handle locked files before deletion
 tasks.register('forceClean', Delete) {
     delete fileTree(dir: "${rootProject.buildDir}") {
@@ -94,6 +106,21 @@ tasks.register('forceClean', Delete) {
         println "Build directory cleaned successfully."
     }
 }
+tasks.register('build') {
+    dependsOn subprojects*.tasks.findAll { it.name == 'build' }
+    doLast {
+        println "Root build task executed successfully."
+    }
+}
+
+tasks.register('preBuildClean', Delete) {
+    delete rootProject.buildDir
+}
+
+tasks.named('build').configure {
+    dependsOn preBuildClean
+}
+
 
 // Custom clean task that ensures deletion before building
 tasks.register('safeClean') {

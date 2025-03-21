@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -75,6 +76,8 @@ public abstract class Nivel implements InputProcessor{
     private int dotFinalX, dotFinalY; 
     protected Music music;
     public boolean todosNivelesCompletados;
+    private long tiempoJugado;
+    private HashSet<Par> celdasOcupadas;
 
     public Nivel(int sizeGrid, double tiempoLimite, Usuario jugador, FlowFreeGame FlowFree, int sizeCelda ){
         this.sizeGrid = sizeGrid;  
@@ -113,6 +116,7 @@ public abstract class Nivel implements InputProcessor{
         skin.add("default", font);
         numeroNivel=0;
         todosNivelesCompletados = false;
+        celdasOcupadas = new HashSet<>();
         
         labelTimer = new Label("Tiempo: " + (int)(tiempoLimite- tiempoRestante) , skin);
         labelTimer.setPosition(10, Gdx.graphics.getHeight() - 30);
@@ -170,6 +174,9 @@ public abstract class Nivel implements InputProcessor{
     public abstract void inicializar();
     
     public void actualizar(float delta) {
+    
+    tiempoJugado = (long)(tiempoLimite - tiempoRestante);
+
     if (nivelCompletado) {
         return;
     }
@@ -183,7 +190,7 @@ public abstract class Nivel implements InputProcessor{
          Gdx.app.postRunnable(() -> {
              System.out.println("Mostrando mensaje de time is up");
             JOptionPane.showMessageDialog(null, "Su tiempo ha acabado...", "Fail", JOptionPane.INFORMATION_MESSAGE);
-             System.out.println("Usuario ya sabe que su tiemp se acabo");
+            jugador.actualizarEstadisticas(0, tiempoJugado);
             PantallaJuego.manejoNivel.getNivelActual().reiniciarNivel();
         });
 
@@ -198,7 +205,7 @@ public abstract class Nivel implements InputProcessor{
         nivelCompletado = true;
         mostrarMensajeCompletacion = true;
         detenerHiloTiempo();
-        jugador.nivelesCompletados++; 
+        jugador.actualizarEstadisticas(1, tiempoJugado);
         jugador.tiemposPorNivel.set(numeroNivel, (tiempoLimite - tiempoRestante));
     }
 }
@@ -279,6 +286,7 @@ public abstract class Nivel implements InputProcessor{
             Gdx.app.postRunnable(() -> {
             JOptionPane.showMessageDialog(null, "Nivel completado con un tiempo de " + (int) (tiempoLimite - tiempoRestante )+
                     " segundos", "Completacion", JOptionPane.INFORMATION_MESSAGE);
+            tiempoJugado =(long) (tiempoLimite - tiempoRestante);
             if(todosNivelesCompletados){
                 JOptionPane.showMessageDialog(null, "Felicidades, has completado todos los niveles!", ">0<", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -300,11 +308,20 @@ public abstract class Nivel implements InputProcessor{
         nivelCompletado = false;
         puntos.clear();
         conexiones.clear();
+        celdasOcupadas.clear();
+        
+        for (Punto punto : puntos) {
+            grid[punto.getFila()][punto.getCol()] = 1; 
+            celdasOcupadas.add(new Par(punto.getCol(), punto.getFila())); 
+        }
+        
         detenerHiloTiempo(); 
         detenerHiloColisiones();
         music.dispose();
         inicializar(); 
         this.calcularOffsets();
+        
+        
     }
     
     public abstract void disposeNivel();
@@ -392,37 +409,22 @@ protected void detenerHiloTiempo() {
     if(pathActual ==null){
         return false;
     }
-    for (Conexion conexion : conexiones) {
-        for (int[] posicion : conexion.getPath()) {
-            for (int[] posicionActual : pathActual) {
-                if (posicionActual[0] == posicion[0] && posicionActual[1] == posicion[1]) {
-                    return true; 
-                }
-            }
-        }
-    }
-
     
     for (int[] posicion : pathActual) {
         int fila = posicion[1];
         int col = posicion[0];
 
-        //skip las dots iniciales y finales del path actual
-        if ((fila == dotInicialY && col == dotInicialX) || (fila == dotFinalY && col == dotFinalX)) {
+        //skippeamos las dots finales e iniciales de la conexion
+        if ((col ==dotInicialX && fila == dotInicialY) || (col ==dotFinalX && fila == dotFinalY)){
             continue;
         }
-
-        //colision con dots
-        if (grid[fila][col] == 1) {
-            Punto punto = gridPuntos[fila][col];
-            if (punto != null && !punto.getColor().equals(gridPuntos[dotInicialY][dotInicialX].getColor())) {
-                return true; 
-            }
+        
+        if(grid[fila][col] ==1){
+            return true;
         }
-
-        //colision entre paths existentes
-        if (fila < 0 || fila >= sizeGrid || col < 0 || col >= sizeGrid || grid[fila][col] == 2) {
-            return true; 
+        
+        if(celdasOcupadas.contains(new Par(col,fila))){
+            return true;
         }
     }
 
@@ -571,10 +573,9 @@ protected void detenerHiloTiempo() {
                 if (PantallaJuego.manejoNivel.getNivelActual().pathActual != null &&
                         !PantallaJuego.manejoNivel.getNivelActual().pathActual.isEmpty() &&
                         esPathValido(PantallaJuego.manejoNivel.getNivelActual().pathActual)) {
-                    System.out.println("Path valido");
                     for (int[] posicion : PantallaJuego.manejoNivel.getNivelActual().pathActual) {
                         PantallaJuego.manejoNivel.getNivelActual().grid[posicion[1]][posicion[0]] = 2; 
-                        System.out.println("Marcado en grid: " + posicion[1] + "," + posicion[0]);
+                        celdasOcupadas.add(new Par(posicion[0],posicion[1]));
                     }
                     
                     PantallaJuego.manejoNivel.getNivelActual().conexiones.add(new Conexion(dotInicial, dotFinal,
@@ -666,6 +667,7 @@ protected void detenerHiloTiempo() {
        
        for (int[] posicion : conexion.getPath()){
            PantallaJuego.manejoNivel.getNivelActual().grid[posicion[1]][posicion[0]] =0;
+           celdasOcupadas.remove(new Par(posicion[0], posicion[1])); 
            
        }
        

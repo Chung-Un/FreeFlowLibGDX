@@ -84,17 +84,17 @@ public class Usuario implements Serializable {
     }
 
     // Actualiza estadísticas y registra la partida
-    public void actualizarEstadisticas(int nuevosNiveles, long tiempoSesion, int puntosObtenidos) {
+    public void actualizarEstadisticas(int nuevosNiveles, long tiempoSesion) {
         this.nivelesCompletados += nuevosNiveles;
         this.tiempoJugado += tiempoSesion;
-        this.puntuacionGeneral += puntosObtenidos;
+//        this.puntuacionGeneral += puntosObtenidos;
         this.ultimaSesion = LocalDateTime.now();
 
         // Registrar en el historial
         this.historialPartidas.add("Fecha: " + ultimaSesion
                 + ", Niveles: " + nuevosNiveles
                 + ", Tiempo: " + tiempoSesion + "s"
-                + ", Puntos: " + puntosObtenidos
+//                + ", Puntos: " + puntosObtenidos
                 + ", Tiempo Promedio por Nivel: " + getTiempoPromedioPorNivel() + "s");
 
         guardarDatos();
