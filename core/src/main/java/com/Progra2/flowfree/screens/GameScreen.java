@@ -27,7 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
  */
 public class GameScreen implements Screen {
     private FlowFreeGame game;
-    private FlowFreeGame fw;
     private Stage stage;
     private Skin skin;
     private Usuario usuario;
@@ -66,7 +65,7 @@ public class GameScreen implements Screen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PantallaMapa(fw,usuario));
+                game.setScreen(new PantallaMapa(game,usuario));
             }
         });
         
