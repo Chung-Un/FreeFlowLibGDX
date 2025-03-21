@@ -10,6 +10,7 @@ import com.badlogic.gdx.files.FileHandle;
 public class AvatarManager {
     private static final String AVATARS_FOLDER = "avatars";
     private static final String[] DEFAULT_AVATARS = { 
+        "default.png",
         "avatar1.png", 
         "avatar2.png", 
         "avatar3.png", 
