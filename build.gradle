@@ -59,6 +59,11 @@ configure(subprojects) {
   }
   processResources.dependsOn 'generateAssetList'
 
+    tasks.withType(ProcessResources) {
+    outputs.upToDateWhen { false }
+}
+
+
   compileJava {
     options.incremental = true
   }

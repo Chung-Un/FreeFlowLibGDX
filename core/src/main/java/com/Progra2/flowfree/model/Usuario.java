@@ -57,6 +57,10 @@ public class Usuario implements Serializable {
         this.avatar = "default.png";
         this.puntuacionGeneral = 0;
         this.amigos = new ArrayList<>();
+        this.tiemposPorNivel =new ArrayList<>();
+        for( int i=0; i<5 ; i++){
+            tiemposPorNivel.add(0.0);
+        }
     }
 
     // Método para cifrar la contraseña con SHA-256

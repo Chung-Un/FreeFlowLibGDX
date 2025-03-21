@@ -2,7 +2,6 @@ package com.Progra2.FreeFlowLibGDX.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.Progra2.FreeFlowLibGDX.FreeFlow;
 import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
 
 /** Launches the desktop (LWJGL3) application. */

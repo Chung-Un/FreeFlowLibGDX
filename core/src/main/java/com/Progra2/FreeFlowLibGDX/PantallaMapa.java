@@ -116,7 +116,7 @@ public class PantallaMapa implements Screen{
         btnRegresar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                FlowFree.setScreen(new MenuScreen(FlowFree));
+                FlowFree.setScreen(new GameScreen(FlowFree,jugador));
                 dispose();
             }
         });
@@ -129,7 +129,6 @@ public class PantallaMapa implements Screen{
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage); 
-        System.out.println("Pantalla mapa mostrada");
         actualizarBotonesNiveles();
     }
 

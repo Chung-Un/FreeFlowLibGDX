@@ -49,12 +49,14 @@ public class GameScreen implements Screen {
             "Niveles completados: " + usuario.getNivelesCompletados() + "\n" +
             "Tiempo jugado: " + usuario.getTiempoJugado() + "s\n" +
             "Tiempo promedio por nivel: " + usuario.getTiempoPromedioPorNivel() + "s\n" +
-            "Puntuación General: " + usuario.getPuntuacionGeneral(), 
+            "Puntuacion General: " + usuario.getPuntuacionGeneral(), 
             skin
         );
 
-        Button backButton = new TextButton("Volver al Menú", skin);
+        Button backButton = new TextButton("Volver al Menu", skin);
         Button playButton = new TextButton("Jugar", skin);
+        backButton.clearListeners();
+        playButton.clearListeners();
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -80,7 +82,10 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void show() {}
+    public void show() {
+        System.out.println("Number of actors in stage: " + stage.getActors().size);
+
+    }
 
     @Override
     public void render(float delta) {
@@ -96,6 +101,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {}
+    
 
     @Override
     public void resume() {}
