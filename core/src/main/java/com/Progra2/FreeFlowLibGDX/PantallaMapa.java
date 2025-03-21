@@ -4,6 +4,9 @@
  */
 package com.Progra2.FreeFlowLibGDX;
 
+import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
+import com.Progra2.flowfree.model.Usuario;
+import com.Progra2.flowfree.screens.MenuScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -29,7 +32,7 @@ import java.util.ArrayList;
 public class PantallaMapa implements Screen{
     private Texture texturaFondo;
     private Texture texturaTitulo;
-    private FreeFlow FlowFree;
+    private FlowFreeGame FlowFree;
     private Skin skin;
     private Stage stage;
     private static float y;
@@ -46,9 +49,9 @@ public class PantallaMapa implements Screen{
     private Music music;
     private ImageButton.ImageButtonStyle nivelCerradoBtnStyle ;
     private ImageButton.ImageButtonStyle nivelAbiertoBtnStyle; 
-    private Jugador jugador;
+    private Usuario jugador;
     
-    public PantallaMapa(FreeFlow FlowFree, Jugador jugador){
+    public PantallaMapa(FlowFreeGame FlowFree, Usuario jugador){
         this.FlowFree = FlowFree;
         stage = new Stage(new ScreenViewport());
         this.jugador = jugador;
@@ -113,55 +116,12 @@ public class PantallaMapa implements Screen{
         btnRegresar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                FlowFree.setScreen(new PantallaPrincipal(FlowFree));
+                FlowFree.setScreen(new MenuScreen(FlowFree));
                 dispose();
             }
         });
         
-//        btnNivel1.addListener(new ClickListener() {
-//        @Override
-//        public void clicked(InputEvent event, float x, float y) {
-//            System.out.println("Starting Nivel1...");
-//            FlowFree.setScreen(new PantallaJuego(FlowFree, jugador,0));
-//            dispose();
-//        }
-//        });
-//
-//    btnNivel2.addListener(new ClickListener() {
-//        @Override
-//        public void clicked(InputEvent event, float x, float y) {
-//            System.out.println("Starting Nivel2...");
-//            FlowFree.setScreen(new PantallaJuego(FlowFree, jugador,1));
-//            dispose();
-//        }
-//        });
-//    
-//    btnNivel3.addListener(new ClickListener() {
-//        @Override
-//        public void clicked(InputEvent event, float x, float y) {
-//            System.out.println("Starting Nivel3...");
-//            FlowFree.setScreen(new PantallaJuego(FlowFree, jugador,2));
-//            dispose();
-//        }
-//        });
-//    
-//    btnNivel4.addListener(new ClickListener() {
-//        @Override
-//        public void clicked(InputEvent event, float x, float y) {
-//            System.out.println("Starting Nivel3...");
-//            FlowFree.setScreen(new PantallaJuego(FlowFree, jugador,3));
-//            dispose();
-//        }
-//        });
-//    
-//    btnNivel5.addListener(new ClickListener() {
-//        @Override
-//        public void clicked(InputEvent event, float x, float y) {
-//            System.out.println("Starting Nivel3...");
-//            FlowFree.setScreen(new PantallaJuego(FlowFree, jugador,4));
-//            dispose();
-//        }
-//        });
+
     }
     
     

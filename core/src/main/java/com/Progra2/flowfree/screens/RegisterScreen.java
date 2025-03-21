@@ -62,7 +62,7 @@ public class RegisterScreen implements Screen {
         table.add(nameField).width(200).padBottom(10).row();
         table.add(new Label("Usuario:", skin)).left();
         table.add(userField).width(200).padBottom(10).row();
-        table.add(new Label("Contraseña:", skin)).left();
+        table.add(new Label("Contrasena:", skin)).left();
         table.add(passField).width(200).padBottom(20).row();
         table.add(registerButton).colspan(2).padBottom(10).row();
         table.add(backButton).colspan(2).row();

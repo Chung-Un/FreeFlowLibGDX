@@ -4,6 +4,8 @@
  */
 package com.Progra2.FreeFlowLibGDX;
 
+import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
+import com.Progra2.flowfree.model.Usuario;
 import com.badlogic.gdx.graphics.Color;
 
 /**
@@ -11,7 +13,7 @@ import com.badlogic.gdx.graphics.Color;
  * @author chung
  */
 public class Nivel3 extends Nivel{
-    public Nivel3 (int sizeGrid, double tiempoLimite, Jugador jugador, FreeFlow FlowFree ){
+    public Nivel3 (int sizeGrid, double tiempoLimite, Usuario jugador, FlowFreeGame FlowFree ){
         super(sizeGrid, tiempoLimite, jugador, FlowFree,80);
         this.grid= new int[sizeGrid][sizeGrid];
         
@@ -54,6 +56,9 @@ public class Nivel3 extends Nivel{
         }
         iniciarHiloTiempo();
         iniciarHiloColisiones();
+        music.setLooping(true);
+        music.setVolume(0.5f);
+        music.play();
     }
 
     @Override
@@ -67,6 +72,7 @@ public class Nivel3 extends Nivel{
         texturaPurple.dispose();
         detenerHiloTiempo();
         detenerHiloColisiones();
+        music.dispose();
     }
 
     @Override

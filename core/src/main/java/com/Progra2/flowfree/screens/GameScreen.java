@@ -4,6 +4,8 @@
  */
 package com.Progra2.flowfree.screens;
 
+import com.Progra2.FreeFlowLibGDX.FreeFlow;
+import com.Progra2.FreeFlowLibGDX.PantallaMapa;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -16,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
 import com.Progra2.flowfree.model.Usuario;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
  *
@@ -23,6 +27,7 @@ import com.Progra2.flowfree.model.Usuario;
  */
 public class GameScreen implements Screen {
     private FlowFreeGame game;
+    private FlowFreeGame fw;
     private Stage stage;
     private Skin skin;
     private Usuario usuario;
@@ -50,15 +55,26 @@ public class GameScreen implements Screen {
         );
 
         Button backButton = new TextButton("Volver al Menú", skin);
-        backButton.addListener(e -> {
-            game.setScreen(new MenuScreen(game));
-            return true;
+        Button playButton = new TextButton("Jugar", skin);
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MenuScreen(game));
+            }
         });
-
+        
+        playButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new PantallaMapa(fw,usuario));
+            }
+        });
+        
         Table table = new Table();
         table.setFillParent(true);
         table.add(titleLabel).padBottom(20).row();
         table.add(statsLabel).padBottom(20).row();
+        table.add(playButton).row();
         table.add(backButton).row();
 
         stage.addActor(table);

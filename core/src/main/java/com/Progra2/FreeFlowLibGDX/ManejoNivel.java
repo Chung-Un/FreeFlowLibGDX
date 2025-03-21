@@ -4,7 +4,10 @@
  */
 package com.Progra2.FreeFlowLibGDX;
 
+import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
+import com.Progra2.flowfree.model.Usuario;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,11 +16,11 @@ import java.util.ArrayList;
 public class ManejoNivel {
     private static ArrayList<Nivel> niveles;
     private static int nivelActual;
-    private Jugador jugador;
-    private FreeFlow FlowFree;
+    private Usuario jugador;
+    private FlowFreeGame FlowFree;
     
     
-    public ManejoNivel(Jugador jugador, FreeFlow FlowFree, int nivel){
+    public ManejoNivel(Usuario jugador, FlowFreeGame FlowFree, int nivel){
         this.jugador = jugador;
         this.FlowFree = FlowFree;
         niveles = new ArrayList();
@@ -38,6 +41,7 @@ public class ManejoNivel {
         nivelActual++;
         System.out.println("Advanced to Level " + nivelActual + " with Grid Size: " + getNivelActual().sizeGrid);
     } else {
+        getNivelActual().todosNivelesCompletados = true;
         System.out.println("All levels completed.");
     }
 }

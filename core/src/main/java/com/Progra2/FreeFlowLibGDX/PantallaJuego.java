@@ -4,6 +4,8 @@
  */
 package com.Progra2.FreeFlowLibGDX;
 
+import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
+import com.Progra2.flowfree.model.Usuario;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -16,11 +18,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class PantallaJuego implements Screen{
     private Nivel nivelActual;
     public static  ManejoNivel manejoNivel;
-    private FreeFlow FlowFree;
+    private FlowFreeGame FlowFree;
     private SpriteBatch batch;
     protected static Conexion conexionHovered = null;
     
-    public PantallaJuego(FreeFlow FlowFree, Jugador jugador, int nivel){
+    public PantallaJuego(FlowFreeGame FlowFree, Usuario jugador, int nivel){
         this.FlowFree = FlowFree;
         manejoNivel = new ManejoNivel(jugador, FlowFree,nivel);
         nivelActual = manejoNivel.getNivelActual();

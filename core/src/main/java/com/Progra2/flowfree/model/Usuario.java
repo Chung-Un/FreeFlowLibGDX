@@ -25,20 +25,23 @@ import java.util.UUID;
  */
 public class Usuario implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+   private static final long serialVersionUID = 1L;
     private String idUsuario;
     private String nombreUsuario;
-    private String passwordHash; // Guardar hash en vez de la contraseña real
+    private String passwordHash; 
     private String nombreCompleto;
     private LocalDateTime fechaRegistro;
     private LocalDateTime ultimaSesion;
-    private int nivelesCompletados;
+    public int nivelesCompletados;
     private long tiempoJugado;
     private List<String> historialPartidas;
     private Map<String, String> preferencias;
     private String avatar;
     private int puntuacionGeneral;
     private List<String> amigos;
+    public ArrayList<Double> tiemposPorNivel;
+
+    
 
     public Usuario(String nombreUsuario, String password, String nombreCompleto) {
         this.idUsuario = UUID.randomUUID().toString();
@@ -173,5 +176,9 @@ public class Usuario implements Serializable {
 
     public List<String> getAmigos() {
         return amigos;
+    }
+    
+    public void setTiemposPorNivel(ArrayList<Double> tiemposPorNivel) {
+        this.tiemposPorNivel = tiemposPorNivel;
     }
 }

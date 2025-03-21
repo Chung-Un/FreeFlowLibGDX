@@ -45,19 +45,21 @@ public class MenuScreen implements Screen {
         passField.setPasswordMode(true);
         passField.setPasswordCharacter('*');
 
-        Button loginButton = new TextButton("Iniciar Sesión", skin);
+        Button loginButton = new TextButton("Iniciar Sesion", skin);
         Button registerButton = new TextButton("Registrarse", skin);
-
+        
+        
         // Layout con Table
         Table table = new Table();
         table.setFillParent(true);
         table.add(titleLabel).padBottom(20).row();
         table.add(new Label("Usuario:", skin)).left();
         table.add(userField).width(200).padBottom(10).row();
-        table.add(new Label("Contraseña:", skin)).left();
+        table.add(new Label("Contrasena", skin)).left();
         table.add(passField).width(200).padBottom(20).row();
         table.add(loginButton).colspan(2).padBottom(10).row();
         table.add(registerButton).colspan(2).row();
+        
         
         stage.addActor(table);
 
@@ -69,7 +71,7 @@ public class MenuScreen implements Screen {
                 String password = passField.getText();
                 Usuario user = Usuario.cargarDatos(usuario);
                 if (user != null && user.verificarPassword(password)) {
-                    game.setScreen(new GameScreen(game, user)); // Iniciar juego si la contraseña es correcta
+                    game.setScreen(new GameScreen(game, user)); 
                 } else {
                     System.out.println("Usuario o contraseña incorrectos");
                 }

@@ -5,9 +5,12 @@
 package com.Progra2.FreeFlowLibGDX;
 
 
+import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
+import com.Progra2.flowfree.model.Usuario;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -35,7 +38,7 @@ import javax.swing.SwingUtilities;
  * @author Nadiesda Fuentes
  */
 public abstract class Nivel implements InputProcessor{
-    protected Jugador jugador;
+    protected Usuario jugador;
     protected int sizeGrid;
     protected double tiempoRestante;
     protected boolean nivelCompletado;
@@ -46,7 +49,7 @@ public abstract class Nivel implements InputProcessor{
     private Thread hiloTiempo, hiloColisiones;
     private boolean verificandoConexiones;
     private float y;
-    protected FreeFlow FlowFree;
+    protected FlowFreeGame FlowFree;
     protected Stage stage;
     private volatile boolean tiempoCorriendo, colisionDetectada, corriendoHiloColision;//volatile: sera modificado por threads
     protected boolean mostrarMensajeCompletacion;
@@ -70,8 +73,10 @@ public abstract class Nivel implements InputProcessor{
     protected double tiempoLimite;
     private InputMultiplexer multipleInput;
     private int dotFinalX, dotFinalY; 
+    protected Music music;
+    public boolean todosNivelesCompletados;
 
-    public Nivel(int sizeGrid, double tiempoLimite, Jugador jugador, FreeFlow FlowFree, int sizeCelda ){
+    public Nivel(int sizeGrid, double tiempoLimite, Usuario jugador, FlowFreeGame FlowFree, int sizeCelda ){
         this.sizeGrid = sizeGrid;  
         this.tiempoRestante = tiempoLimite;
         this.nivelCompletado = false;
@@ -107,11 +112,15 @@ public abstract class Nivel implements InputProcessor{
         font = new BitmapFont();
         skin.add("default", font);
         numeroNivel=0;
+        todosNivelesCompletados = false;
         
         labelTimer = new Label("Tiempo: " + (int)(tiempoLimite- tiempoRestante) , skin);
         labelTimer.setPosition(10, Gdx.graphics.getHeight() - 30);
         stage.addActor(labelTimer);
 
+        music = Gdx.audio.newMusic(Gdx.files.internal("musicnivel.mp3"));
+       
+        
         ImageButton.ImageButtonStyle btnRegresarStyle = new ImageButton.ImageButtonStyle();
         btnRegresarStyle.imageUp = new TextureRegionDrawable(new TextureRegion(texturaRegresar));
         btnRegresar = new ImageButton(btnRegresarStyle);
@@ -270,6 +279,9 @@ public abstract class Nivel implements InputProcessor{
             Gdx.app.postRunnable(() -> {
             JOptionPane.showMessageDialog(null, "Nivel completado con un tiempo de " + (int) (tiempoLimite - tiempoRestante )+
                     " segundos", "Completacion", JOptionPane.INFORMATION_MESSAGE);
+            if(todosNivelesCompletados){
+                JOptionPane.showMessageDialog(null, "Felicidades, has completado todos los niveles!", ">0<", JOptionPane.INFORMATION_MESSAGE);
+            }
             PantallaJuego.manejoNivel.getNivelActual();
             disposeNivel();
             FlowFree.setScreen(new PantallaMapa(FlowFree, jugador)); 
@@ -290,6 +302,7 @@ public abstract class Nivel implements InputProcessor{
         conexiones.clear();
         detenerHiloTiempo(); 
         detenerHiloColisiones();
+        music.dispose();
         inicializar(); 
         this.calcularOffsets();
     }
