@@ -6,6 +6,8 @@ package com.Progra2.flowfree.screens;
 
 import java.io.File;
 
+import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
+import com.Progra2.flowfree.model.Usuario;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -18,8 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
-import com.Progra2.flowfree.model.Usuario;
 
 /**
  *
@@ -105,7 +105,13 @@ public class RegisterScreen implements Screen {
             messageLabel.setText("El usuario ya existe. Elige otro nombre.");
             return;
         }
-
+       
+        //Avatar
+        File avatarsFolder = new File("avatars");
+        if (!avatarsFolder.exists()) {
+            avatarsFolder.mkdirs();
+        }
+    
         // Crear y guardar el nuevo usuario
         Usuario nuevoUsuario = new Usuario(nombreUsuario, password, nombreCompleto);
         nuevoUsuario.guardarDatos();
