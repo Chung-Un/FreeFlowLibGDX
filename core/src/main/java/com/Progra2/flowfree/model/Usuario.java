@@ -113,6 +113,14 @@ public class Usuario implements Serializable {
         guardarDatos();
     }
 
+    public File getAvatarFile(){
+        File avatarFile = new File("avatars/" +this.avatar);
+        if (avatarFile.exists()){
+            return avatarFile;
+        }
+        return new File("avatar/default.png");
+    }
+
     // Método para agregar amigos
     public void agregarAmigo(String nombreAmigo) {
         if (!amigos.contains(nombreAmigo)) {
