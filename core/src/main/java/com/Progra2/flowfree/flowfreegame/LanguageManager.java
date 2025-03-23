@@ -1,6 +1,7 @@
 package com.Progra2.flowfree.flowfreegame;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
