@@ -107,7 +107,7 @@ tasks.register('forceClean', Delete) {
     }
 }
 tasks.register('build') {
-    dependsOn subprojects*.tasks.findAll { it.name == 'build' }
+dependsOn subprojects.collectMany { it.tasks }.findAll { it.name == 'build' }
     doLast {
         println "Root build task executed successfully."
     }

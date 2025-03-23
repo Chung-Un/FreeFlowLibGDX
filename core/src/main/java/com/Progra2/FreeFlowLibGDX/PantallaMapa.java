@@ -6,6 +6,7 @@ package com.Progra2.FreeFlowLibGDX;
 
 import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
 import com.Progra2.flowfree.model.Usuario;
+import com.Progra2.flowfree.screens.GameScreen;
 import com.Progra2.flowfree.screens.MenuScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
