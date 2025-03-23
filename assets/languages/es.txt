@@ -1,0 +1,10 @@
+menu_jugar=Jugar
+menu_niveles=Niveles
+menu_configuracion=Configuración
+menu_salir=Salir
+settings_idioma=Idioma
+settings_sonido=Sonido
+settings_musica=Música
+nivel_completado=¡Nivel Completado!
+nivel_fallido=Intentar de nuevo
+atras=Atrás

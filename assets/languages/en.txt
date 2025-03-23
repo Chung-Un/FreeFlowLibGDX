@@ -1,0 +1,10 @@
+menu_jugar=Play
+menu_niveles=Levels
+menu_configuracion=Settings
+menu_salir=Exit
+settings_idioma=Language
+settings_sonido=Sound
+settings_musica=Music
+nivel_completado=Level Complete!
+nivel_fallido=Try Again
+atras=Back
