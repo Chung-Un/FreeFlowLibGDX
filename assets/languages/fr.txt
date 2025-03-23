@@ -34,7 +34,7 @@ ranking=Classement
 avatar_seleccion=Sélectionnez votre avatar
 avatar_seleccionado=Avatar sélectionné :
 avatar_subir=Télécharger mon propre avatar
-avatar_subido_exito=Avatar téléchargé avec succès!
+avatar_subido_exito=Avatar téléchargé avec sélectionné succès!
 error_subir_avatar=L'avatar n'a pas pu être téléchargé...
 avatar_no_seleccionado=Aucun avatar n'a été sélectionné
 usuario_borrado= a été supprimé avec succès
@@ -43,7 +43,8 @@ seguro_borrar=Êtes-vous sûr de vouloir supprimer votre compte?
 datos_incorrectos=Les données saisies sont incorrectes
 volumen=Volume
 guardar_volumen=Enregistrer les paramètres de volume
-
+avatar_seleccionadoExito=Avatar a sélectionné avec succès!
+nivel=Niveau
 
 
 

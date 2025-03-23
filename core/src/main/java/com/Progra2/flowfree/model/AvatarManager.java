@@ -10,7 +10,7 @@ import com.badlogic.gdx.files.FileHandle;
 
 public class AvatarManager {
     private static final String AVATARS_FOLDER = "avatars";
-    private static final String USER_AVATARS_FOLDER = "user_avatars";
+    public static final String USER_AVATARS_FOLDER = "user_avatars";
     private static final String[] DEFAULT_AVATARS = { 
         "defaultAvatar.png",
         "avatar1.png", 
@@ -79,12 +79,11 @@ public class AvatarManager {
             }
 
             String newFileName = "custom_" + System.currentTimeMillis() + "." + getFileExtension(file);
-            File destination = new File(userAvatarFolder + newFileName);
-
+            File destination = new File(userAvatarFolder.getAbsolutePath() + File.separator + newFileName);
+            
             java.nio.file.Files.copy(file.toPath(), destination.toPath());
 
-            return USER_AVATARS_FOLDER + File.separator + AvatarSelectionScreen.usuarioActual.getNombreUsuario()
-            + File.separator + newFileName;
+            return destination.getAbsolutePath();
         } catch (IOException e) {
             System.err.println("Error al guardar el avatar personalizado: " + e.getMessage());
             return null;
@@ -108,18 +107,14 @@ public class AvatarManager {
             name.toLowerCase().endsWith(".jpeg"));
     }
     
-    public static File obtenerAvatarPersonalizado(String username) {
+    public static File[] obtenerAvatarPersonalizado(String username) {
         File userAvatarFolder = new File(USER_AVATARS_FOLDER + File.separator + username);
         if (userAvatarFolder.exists()) {
-            File[] customAvatars = userAvatarFolder.listFiles((dir, name) -> 
+            return userAvatarFolder.listFiles((dir, name) -> 
                 name.toLowerCase().endsWith(".png") || 
                 name.toLowerCase().endsWith(".jpg") || 
                 name.toLowerCase().endsWith(".jpeg"));
-            if (customAvatars != null && customAvatars.length > 0) {
-                return customAvatars[0]; 
-            }
         }
-        return null; 
+        return new File[0];
     }
-
 }

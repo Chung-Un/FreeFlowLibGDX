@@ -34,7 +34,7 @@ ranking=Ranking
 avatar_seleccion=Select your avatar
 avatar_seleccionado=Avatar selected:
 avatar_subir=Upload my own avatar
-avatar_subido_exito=Avatar uploaded successfully!
+avatar_subido_exito=Avatar uploaded and selected successfully!
 error_subir_avatar=Avatar couldn't be uploaded...
 avatar_no_seleccionado=Avatar not chosen
 usuario_borrado= has been deleted successfully!
@@ -43,6 +43,6 @@ seguro_borrar=Are you sure you want to delete your account?
 datos_incorrectos=Wrong credentials
 volumen=Volume
 guardar_volumen=Save volume settings
-
-
+avatar_seleccionadoExito=Avatar has been selected successfully!
+nivel=Level
 

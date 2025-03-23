@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -23,6 +25,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 
@@ -32,10 +35,14 @@ public class AvatarSelectionScreen implements Screen {
     private Array<Texture> avatarTextures;
     private FlowFreeGame game;
     private BitmapFont font; 
+    private Skin skin;
     
     public AvatarSelectionScreen(Usuario usuario, FlowFreeGame game) {
+        MenuScreen.musicMain.setVolume(usuario.getVolumenMusica());
+        MenuScreen.musicMain.play();
         this.game = game;
         this.usuarioActual = usuario;
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         font = new BitmapFont(Gdx.files.internal("default.fnt"));
@@ -55,18 +62,16 @@ public class AvatarSelectionScreen implements Screen {
         
         stage.addActor(mainTable);
         
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        Label.LabelStyle labelStyle = skin.get(Label.LabelStyle.class);
         labelStyle.font = font; 
         labelStyle.fontColor = Color.WHITE; 
         
-        TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
+        TextButton.TextButtonStyle btnStyle = skin.get(TextButton.TextButtonStyle.class);
         btnStyle.font = font; 
-        
-        
-        
+       
         // Título
         Label titleLabel = new Label(languageManager.getText("avatar_seleccion"), labelStyle);
-        mainTable.add(titleLabel).colspan(3).pad(20);
+        mainTable.add(titleLabel).colspan(3).pad(10);
         mainTable.row();
         
         // Cargar las texturas de los avatares
@@ -74,6 +79,15 @@ public class AvatarSelectionScreen implements Screen {
         
         // Crear grid de avatares
         Table avatarGrid = new Table();
+        avatarGrid.pack();
+        avatarGrid.setHeight(Gdx.graphics.getHeight()-200);
+        ScrollPane scrollPane = new ScrollPane(avatarGrid,skin);
+        scrollPane.setScrollingDisabled(false, true); 
+        scrollPane.setFadeScrollBars(false); 
+        scrollPane.setScrollbarsOnTop(true);
+        mainTable.add(scrollPane).colspan(3).pad(20).fill().expand();
+        mainTable.row();
+        
         int index = 0;
         
         File[] avatarFiles = AvatarManager.obtenerArchivosAvatar();
@@ -89,7 +103,8 @@ public class AvatarSelectionScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     usuarioActual.setAvatar(avatarName);
-                    System.out.println(languageManager.getText("avatar_seleccionado") + avatarName);
+                    JOptionPane.showMessageDialog(null, languageManager.getText("avatar_seleccionadoExito"),
+                    languageManager.getText("avatar_seleccionado"),JOptionPane.INFORMATION_MESSAGE);
                 }
             });
             avatarGrid.add(avatarImage).size(100, 100).pad(10);
@@ -103,31 +118,45 @@ public class AvatarSelectionScreen implements Screen {
         }
         
         // Mostrar avatar personalizado (si existe)
-        File fileAvatarPersonalizado = AvatarManager.obtenerAvatarPersonalizado(usuarioActual.getNombreUsuario());
-        if (fileAvatarPersonalizado != null) {
-            final String avatarPersonalizadoNombre = fileAvatarPersonalizado.getName();
-            
-            Image customAvatarImage = new Image(avatarTextures.get(index));
+        File[] archivosAvataresPersonalizados = new File(AvatarManager.USER_AVATARS_FOLDER 
+        + File.separator + usuarioActual.getNombreUsuario()).listFiles(
+        (dir, name) -> name.toLowerCase().endsWith(".png") ||
+                   name.toLowerCase().endsWith(".jpg") ||
+                   name.toLowerCase().endsWith(".jpeg")
+        );
+
+        if (archivosAvataresPersonalizados != null) {
+        for (File avatarPersonalizado : archivosAvataresPersonalizados) {
+            final String avatarPersonalizadoNombre = avatarPersonalizado.getName();
+
+            Texture customAvatarTexture = new Texture(Gdx.files.absolute(avatarPersonalizado.getAbsolutePath()));
+            avatarTextures.add(customAvatarTexture); // Add texture to avatarTextures
+
+            Image customAvatarImage = new Image(customAvatarTexture);
             customAvatarImage.setSize(100, 100);
-            
+
             customAvatarImage.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     usuarioActual.setAvatar(avatarPersonalizadoNombre); 
-                    System.out.println(languageManager.getText("avatar_seleccionado") + avatarPersonalizadoNombre);
+                    usuarioActual.setCustomAvatarPath(avatarPersonalizado.getAbsolutePath()); 
+
+                    JOptionPane.showMessageDialog(null, languageManager.getText("avatar_seleccionadoExito"),
+                            languageManager.getText("avatar_seleccionado"), JOptionPane.INFORMATION_MESSAGE);
                 }
             });
+
             avatarGrid.add(customAvatarImage).size(100, 100).pad(10);
-            
-            // Nueva fila si es necesario
+
             if ((index + 1) % 3 == 0) {
                 avatarGrid.row();
             }
-            
+
             index++;
         }
+        }
         
-        mainTable.add(avatarGrid).colspan(3).pad(20);
+//        mainTable.add(avatarGrid).colspan(3).pad(20);
         mainTable.row();
         
         TextButton btnSubir = new TextButton(languageManager.getText("avatar_subir"), btnStyle);
@@ -143,13 +172,15 @@ public class AvatarSelectionScreen implements Screen {
                 if (imagenSeleccionada == JFileChooser.APPROVE_OPTION) {
                     File fileSeleccionada = fileChooser.getSelectedFile();
 
-                    String newFileName = AvatarManager.guardarAvatarPersonalizado(fileSeleccionada);
-                    if (newFileName != null) {
-                        usuarioActual.setAvatar(newFileName);
+                    String nombrenuevoFile = AvatarManager.guardarAvatarPersonalizado(fileSeleccionada);
+                    if (nombrenuevoFile != null) {
+                        usuarioActual.setAvatar(nombrenuevoFile);
+                        usuarioActual.setCustomAvatarPath(nombrenuevoFile);
                         cargarTexturas(); 
 
                         JOptionPane.showMessageDialog(null,
                             languageManager.getText("avatar_subido_exito"), "Avatar", JOptionPane.INFORMATION_MESSAGE);
+                            cargarTexturas();
                     } else {
                         JOptionPane.showMessageDialog(null,
                             languageManager.getText("error_subir_avatar"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -159,7 +190,6 @@ public class AvatarSelectionScreen implements Screen {
                 }
             }
         });
-        mainTable.add(btnSubir).pad(10);
         
         // Botón para volver
         TextButton backButton = new TextButton(languageManager.getText("atras"), btnStyle);
@@ -169,10 +199,18 @@ public class AvatarSelectionScreen implements Screen {
                 game.setScreen(new GameScreen(game, usuarioActual));
             }
         });
-        mainTable.add(backButton).pad(20);
+        
+        Table btnTable = new Table();
+        btnTable.bottom().padBottom(30);
+        btnTable.add(btnSubir).center().pad(10);
+        btnTable.add(backButton).center().pad(10);
+        btnTable.row();
+        
+        mainTable.add(btnTable).colspan(3).pad(10).expandX().bottom();
     }
     
     private void cargarTexturas() {
+        
         avatarTextures = new Array<>();
         
         // Cargar avatares predeterminados
@@ -187,17 +225,24 @@ public class AvatarSelectionScreen implements Screen {
             }
         }
         
-        File customAvatarFile = AvatarManager.obtenerAvatarPersonalizado(usuarioActual.getNombreUsuario());
-        if (customAvatarFile != null) {
+        File[] customAvatarFiles = new File(AvatarManager.USER_AVATARS_FOLDER 
+        + File.separator + usuarioActual.getNombreUsuario()).listFiles(
+        (dir, name) -> name.toLowerCase().endsWith(".png") ||
+                   name.toLowerCase().endsWith(".jpg") ||
+                   name.toLowerCase().endsWith(".jpeg")
+        );
+
+    if (customAvatarFiles != null) {
+        for (File customAvatarFile : customAvatarFiles) {
             try {
                 Texture texture = new Texture(Gdx.files.absolute(customAvatarFile.getAbsolutePath()));
                 avatarTextures.add(texture);
             } catch (Exception e) {
-                System.err.println("Error al cargar textura personalizada: " + customAvatarFile.getName());
                 e.printStackTrace();
             }
         }
     }
+}
     
     @Override
     public void render(float delta) {
@@ -214,6 +259,7 @@ public class AvatarSelectionScreen implements Screen {
         for (Texture texture : avatarTextures) {
             texture.dispose();
         }
+        MenuScreen.musicMain.pause();
     }
     
     @Override

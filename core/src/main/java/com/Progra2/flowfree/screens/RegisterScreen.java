@@ -42,6 +42,9 @@ public class RegisterScreen implements Screen {
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
+        MenuScreen.musicMain.setVolume(0.5f);
+        MenuScreen.musicMain.play();
+        
         Texture texturaFondo = new Texture(Gdx.files.internal("FotoFondo.png")); 
         Image imgFondo = new Image(texturaFondo);
         imgFondo.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -160,5 +163,6 @@ public class RegisterScreen implements Screen {
     public void dispose() {
         stage.dispose();
         skin.dispose();
+        MenuScreen.musicMain.pause();
     }
 }

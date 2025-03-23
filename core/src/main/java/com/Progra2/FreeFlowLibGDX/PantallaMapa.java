@@ -5,8 +5,10 @@
 package com.Progra2.FreeFlowLibGDX;
 
 import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
+import static com.Progra2.flowfree.flowfreegame.LanguageManager.languageManager;
 import com.Progra2.flowfree.model.Usuario;
 import com.Progra2.flowfree.screens.GameScreen;
+import com.Progra2.flowfree.screens.MenuScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -46,7 +48,6 @@ public class PantallaMapa implements Screen{
     private Texture texturanivelAbierto;
     private Texture texturaRegresar;
     private ArrayList<ImageButton> botonesNiveles;
-    private Music music;
     private ImageButton.ImageButtonStyle nivelCerradoBtnStyle ;
     private ImageButton.ImageButtonStyle nivelAbiertoBtnStyle; 
     private Usuario jugador;
@@ -98,20 +99,18 @@ public class PantallaMapa implements Screen{
         table.add(btnNivel4).size(sizeBotones).padTop(150).padRight(10);
         table.add(btnNivel5).size(sizeBotones).padTop(150).padRight(10);
         table.row();
-        table.add(new Label("Nivel 1",skin)).padRight(10);
-        table.add(new Label("Nivel 2",skin)).padRight(10);
-        table.add(new Label("Nivel 3",skin)).padRight(10);
-        table.add(new Label("Nivel 4",skin)).padRight(10);
-        table.add(new Label("Nivel 5",skin)).padRight(10);
+        table.add(new Label(languageManager.getText("nivel")+" 1",skin)).padRight(10);
+        table.add(new Label(languageManager.getText("nivel")+" 2",skin)).padRight(10);
+        table.add(new Label(languageManager.getText("nivel")+" 3",skin)).padRight(10);
+        table.add(new Label(languageManager.getText("nivel")+" 4",skin)).padRight(10);
+        table.add(new Label(languageManager.getText("nivel")+" 5",skin)).padRight(10);
         table.row().center();
         table.add(btnRegresar).size(70).padTop(80).colspan(5).align(Align.center);
         
         texturaFondo = new Texture("FotoFondo.png");
         texturaTitulo = new Texture("flowfree.png");
-        music = Gdx.audio.newMusic(Gdx.files.internal("MainMusic.mp3"));
-        music.setLooping(true);
-        music.setVolume(jugador.getVolumenMusica());
-        music.play();
+        
+        MenuScreen.musicMain.play();
         
         btnRegresar.addListener(new ClickListener() {
             @Override
@@ -180,7 +179,7 @@ public class PantallaMapa implements Screen{
         for (ImageButton boton : botonesNiveles) {
             boton.remove();
         }
-        music.dispose();
+        MenuScreen.musicMain.pause();
     }
     
     public void actualizarBotonesNiveles() {

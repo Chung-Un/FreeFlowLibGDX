@@ -130,6 +130,7 @@ public class Usuario implements Serializable {
     // Método para establecer avatar
     public void setAvatar(String avatarPath) {
         this.avatar = avatarPath;
+        this.avatarPersonalizadoDireccion=null;
         guardarDatos();
     }
 

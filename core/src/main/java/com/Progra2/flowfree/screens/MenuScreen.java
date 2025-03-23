@@ -19,6 +19,7 @@ import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
 import com.Progra2.flowfree.flowfreegame.LanguageManager;
 import static com.Progra2.flowfree.flowfreegame.LanguageManager.languageManager;
 import com.Progra2.flowfree.model.Usuario;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -37,6 +38,7 @@ public class MenuScreen implements Screen {
     private TextButton loginButton, registerButton, btnIdiomas,btnSalir;
     private Texture texturaFondo;
     private Image imgFondo;
+    public static Music musicMain;
 
     public MenuScreen(FlowFreeGame game) {
         languageManager= new LanguageManager();
@@ -44,6 +46,13 @@ public class MenuScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
+        if(musicMain==null){
+            musicMain = Gdx.audio.newMusic(Gdx.files.internal("MainMusic.mp3"));
+            musicMain.setVolume(0.5f);
+            musicMain.setLooping(true);
+        }
+        musicMain.play();
+        
         // Cargar Skin (puedes usar "uiskin.json" de libGDX o crear uno personalizado)
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
@@ -150,7 +159,7 @@ public class MenuScreen implements Screen {
         btnSalir.addListener(new ClickListener() {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                System.exit(0);
+                Gdx.app.exit();
             }
         });
 
@@ -184,6 +193,8 @@ public class MenuScreen implements Screen {
     public void dispose() {
         stage.dispose();
         skin.dispose();
+        musicMain.pause();
+        texturaFondo.dispose();
     }
     
      private void refreshUI() {

@@ -44,7 +44,6 @@ public class GameScreen implements Screen {
     private Image imgAvatar;
     private Texture texturaAvatar;
     private Slider volumenSlider;
-    private Music music;
     
     public GameScreen(FlowFreeGame game, Usuario usuario) {
         this.game = game;
@@ -52,9 +51,8 @@ public class GameScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("MainMusic.mp3"));
-        music.setVolume(usuario.getVolumenMusica());
-        music.play();
+        MenuScreen.musicMain.setVolume(usuario.getVolumenMusica());
+        MenuScreen.musicMain.play();
         
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
@@ -164,7 +162,7 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 usuario.setVolumenMusica(volumenSlider.getValue());
-                music.setVolume(volumenSlider.getValue());
+                MenuScreen.musicMain.setVolume(volumenSlider.getValue());
             }
         });
         
@@ -218,7 +216,7 @@ public class GameScreen implements Screen {
         stage.dispose();
         skin.dispose();
         texturaAvatar.dispose();
-        music.dispose();
+        MenuScreen.musicMain.pause();
         
     }
     

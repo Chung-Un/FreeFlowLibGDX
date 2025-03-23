@@ -34,7 +34,7 @@ ranking=Ranking
 avatar_seleccion=Selecciona tu avatar
 avatar_seleccionado=Avatar seleccionado:
 avatar_subir=Subir mi propio avatar
-avatar_subido_exito=Avatar subido exitosamente!
+avatar_subido_exito=Avatar subido y seleccionado exitosamente!
 error_subir_avatar=No se pudo subir el avatar..
 avatar_no_seleccionado=No se selecciono ningun avatar
 usuario_borrado= ha sido borrado exitosamente
@@ -43,4 +43,5 @@ seguro_borrar=Esta seguro que desea borrar su cuenta?
 datos_incorrectos=Datos ingresados son incorrectos
 volumen=Volumen
 guardar_volumen=Guardar ajustes de volumen
-
+avatar_seleccionadoExito=Avatar ha sido seleccionado con exito!
+nivel=Nivel
