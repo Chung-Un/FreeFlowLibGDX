@@ -112,7 +112,7 @@ public class ChangePasswordScreen implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MenuScreen(game, usuarioActual));
+                game.setScreen(new MenuScreen(game));
             }
         });
     }
@@ -152,7 +152,7 @@ public class ChangePasswordScreen implements Screen {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
-                    game.setScreen(new MenuScreen(game, usuarioActual));
+                    game.setScreen(new MenuScreen(game));
                 }
             });
         } else {

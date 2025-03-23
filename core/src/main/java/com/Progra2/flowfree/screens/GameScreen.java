@@ -56,9 +56,6 @@ public class GameScreen implements Screen {
         
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-        // Título
-        Label titleLabel = new Label("Flow Free", skin);
-        titleLabel.setFontScale(2);
 
         // Mostrar estadísticas del usuario
         statsLabel = new Label(
@@ -152,6 +149,16 @@ public class GameScreen implements Screen {
             }
         });
         
+        Button btnCambiar = new TextButton(languageManager.getText("cambiar_password"),skin);
+        btnCambiar.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new ChangePasswordScreen(game,usuario));
+            }
+        });
+        
+        
+        
         volumenSlider = new Slider(0,1,0.1f,false,skin);
         volumenSlider.setValue(usuario.getVolumenMusica());
         
@@ -168,19 +175,18 @@ public class GameScreen implements Screen {
         
         Table table = new Table();
         table.setFillParent(true);
-        table.add(titleLabel).colspan(2).padBottom(10).row();
-        table.add(imgAvatar).colspan(2).size(100, 100).padBottom(10).row(); 
-        table.add(labelVolumen).colspan(2).padBottom(10).row(); 
+        table.add(imgAvatar).colspan(2).size(100, 100).padBottom(10).row();
+        table.add(labelVolumen).colspan(2).padBottom(10).row();
         table.add(volumenSlider).colspan(2).padBottom(10).row();
-        table.add(btnGuardar).colspan(2).padBottom(10).row(); 
-        table.add(statsLabel).colspan(2).row(); 
+        table.add(btnGuardar).colspan(2).padBottom(10).row();
+        table.add(statsLabel).colspan(2).row();
+        table.add(playButton).pad(10).width(150).left(); 
+        table.add(btnBorrar).pad(10).width(150).right().row(); 
+        table.add(btnRanking).pad(10).width(150).left(); 
+        table.add(btnAvatar).pad(10).width(150).right().row();
+        table.add(btnCambiar).colspan(2).pad(10).width(150).center().row(); 
+        table.add(backButton).colspan(2).pad(10).width(150).center().row(); 
 
-        table.add(playButton).pad(10).width(150); 
-        table.add(btnBorrar).pad(10).width(150).row(); 
-        table.add(btnRanking).pad(10).width(150); 
-        table.add(btnAvatar).pad(10).width(150).row();
-        table.add(backButton).colspan(2).pad(10).width(150).row(); 
-        
         stage.addActor(table);
     }
 

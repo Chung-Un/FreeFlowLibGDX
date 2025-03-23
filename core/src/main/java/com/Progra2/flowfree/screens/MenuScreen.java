@@ -35,7 +35,7 @@ public class MenuScreen implements Screen {
     private Skin skin;
     private TextField userField, passField;
     private Label titleLabel,labelUsuario,labelPassword;
-    private TextButton loginButton, registerButton, btnIdiomas,btnSalir;
+    private TextButton loginButton, registerButton, btnIdiomas,btnSalir,btnCambiar;
     private Texture texturaFondo;
     private Image imgFondo;
     public static Music musicMain;
