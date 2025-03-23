@@ -4,6 +4,7 @@
  */
 package com.Progra2.flowfree.model;
 
+import static com.Progra2.flowfree.flowfreegame.LanguageManager.languageManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Nadiesda Fuentes
@@ -30,6 +32,7 @@ public class Usuario implements Serializable {
     private String nombreUsuario;
     private String passwordHash; 
     private String nombreCompleto;
+    private String avatarPersonalizadoDireccion;
     private LocalDateTime fechaRegistro;
     private LocalDateTime ultimaSesion;
     public int nivelesCompletados;
@@ -38,7 +41,7 @@ public class Usuario implements Serializable {
     private Map<String, String> preferencias;
     private String avatar;
     private int puntuacionGeneral;
-    private List<String> amigos;
+    private float volumenMusica;
     public ArrayList<Double> tiemposPorNivel;
 
     
@@ -55,8 +58,9 @@ public class Usuario implements Serializable {
         this.historialPartidas = new ArrayList<>();
         this.preferencias = new HashMap<>();
         this.avatar = "default.png";
+        this.avatarPersonalizadoDireccion=null;
         this.puntuacionGeneral = 0;
-        this.amigos = new ArrayList<>();
+        this.volumenMusica = 1f;//a la mitad por default
         this.tiemposPorNivel =new ArrayList<>();
         for( int i=0; i<5 ; i++){
             tiemposPorNivel.add(0.0);
@@ -105,7 +109,7 @@ public class Usuario implements Serializable {
         if (nivelesCompletados == 0) {
             return 0; // Evitar división por cero
         }
-        return (double) tiempoJugado / nivelesCompletados;
+        return (double) getTiemposPorNivelTotal() / nivelesCompletados;
     }
 
     // Método para establecer preferencias del usuario
@@ -113,7 +117,16 @@ public class Usuario implements Serializable {
         this.preferencias.put(clave, valor);
         guardarDatos();
     }
-
+    
+    public double getTiemposPorNivelTotal(){
+        double tiempoTotal=0;
+        for(double tiempo : tiemposPorNivel){
+            tiempoTotal+=tiempo;
+        }
+        return tiempoTotal;
+    }
+    
+    
     // Método para establecer avatar
     public void setAvatar(String avatarPath) {
         this.avatar = avatarPath;
@@ -125,16 +138,21 @@ public class Usuario implements Serializable {
         if (avatarFile.exists()){
             return avatarFile;
         }
-        return new File("avatar/default.png");
+        return new File("avatar/defaultAvatar.png");
     }
 
-    // Método para agregar amigos
-    public void agregarAmigo(String nombreAmigo) {
-        if (!amigos.contains(nombreAmigo)) {
-            amigos.add(nombreAmigo);
-            guardarDatos();
+    public String getAvatarFileDireccion() {
+        File avatarFile = new File("avatars/" + this.avatar);
+        
+        if(avatarPersonalizadoDireccion!=null && new File(avatarPersonalizadoDireccion).exists()){
+          return avatarPersonalizadoDireccion;
         }
+        else if (avatarFile.exists()) {
+            return "avatars/" + this.avatar; 
+        }
+        return "avatars/defaultAvatar.png"; 
     }
+
 
     // Método para eliminar usuario
     public void eliminarCuenta() {
@@ -142,6 +160,16 @@ public class Usuario implements Serializable {
         if (archivo.exists()) {
             archivo.delete();
         }
+        
+        //borrar su avatar personalizado si tiene uno
+        if (avatarPersonalizadoDireccion != null) {
+            File archivoAvatarPersonalizado = new File(avatarPersonalizadoDireccion);
+            if (archivoAvatarPersonalizado.exists()) {
+                archivoAvatarPersonalizado.delete();
+            }
+        }
+        
+        JOptionPane.showMessageDialog(null, nombreUsuario + " "+languageManager.getText("usuario_borrado"));
     }
 
     public void guardarDatos() {
@@ -168,8 +196,32 @@ public class Usuario implements Serializable {
             return null;
         }
     }
+    
+    public void setCustomAvatarPath(String avatarPersonalizadoDireccion) {
+        this.avatarPersonalizadoDireccion = avatarPersonalizadoDireccion;
+        guardarDatos();
+    }
+    
+    public void setVolumenMusica(float volumenMusica){
+        this.volumenMusica = volumenMusica;
+        guardarDatos();
+    }
+    
+    public String getCustomAvatarPath() {
+        return avatarPersonalizadoDireccion;
+    }
+    
 
     // Getters para estadísticas
+    
+    public String getNombreUsuario(){
+        return nombreUsuario;
+    }
+    
+    public float getVolumenMusica(){
+        return volumenMusica;
+    }
+    
     public int getNivelesCompletados() {
         return nivelesCompletados;
     }
@@ -186,9 +238,6 @@ public class Usuario implements Serializable {
         return historialPartidas;
     }
 
-    public List<String> getAmigos() {
-        return amigos;
-    }
     
     public void setTiemposPorNivel(ArrayList<Double> tiemposPorNivel) {
         this.tiemposPorNivel = tiemposPorNivel;

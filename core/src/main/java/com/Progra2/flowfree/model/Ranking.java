@@ -23,7 +23,11 @@ public class Ranking {
             }
         }
 
-        usuarios.sort((u1, u2) -> Integer.compare(u2.getNivelesCompletados(), u1.getNivelesCompletados()));
+        usuarios.sort((u1, u2) -> {
+            double tiempoPromedio1 = u1.getTiempoPromedioPorNivel();
+            double tiempoPromedio2 = u2.getTiempoPromedioPorNivel();
+            return Double.compare(tiempoPromedio1, tiempoPromedio2);
+        });
         return usuarios;
     }
 }

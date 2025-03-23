@@ -7,7 +7,6 @@ package com.Progra2.FreeFlowLibGDX;
 import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
 import com.Progra2.flowfree.model.Usuario;
 import com.Progra2.flowfree.screens.GameScreen;
-import com.Progra2.flowfree.screens.MenuScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -111,7 +110,7 @@ public class PantallaMapa implements Screen{
         texturaTitulo = new Texture("flowfree.png");
         music = Gdx.audio.newMusic(Gdx.files.internal("MainMusic.mp3"));
         music.setLooping(true);
-        music.setVolume(0.5f);
+        music.setVolume(jugador.getVolumenMusica());
         music.play();
         
         btnRegresar.addListener(new ClickListener() {

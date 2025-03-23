@@ -17,12 +17,13 @@ public class Nivel4 extends Nivel{
     public Nivel4(int sizeGrid, double tiempoLimite, Usuario jugador, FlowFreeGame FlowFree){
         super(sizeGrid, tiempoLimite, jugador, FlowFree,60);
         this.grid= new int[sizeGrid][sizeGrid];
+        this.numeroNivel=4;
     }
 
     @Override
     public void inicializar() {
         this.calcularOffsets();
-         System.out.println("Inicializando nivel 3");
+         System.out.println("Inicializando nivel 4");
         for (int i = 0; i < sizeGrid; i++) {
             for (int j = 0; j < sizeGrid; j++) {
                 grid[i][j] = 0; 
@@ -82,6 +83,7 @@ public class Nivel4 extends Nivel{
         detenerHiloTiempo();
         detenerHiloColisiones();
         music.dispose();
+        pathActual=null;
     }
 
     @Override

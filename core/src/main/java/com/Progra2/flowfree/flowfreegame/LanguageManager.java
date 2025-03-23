@@ -10,22 +10,22 @@ import com.badlogic.gdx.files.FileHandle;
 
 public class LanguageManager {
 
-    private static LanguageManager instance;
+    public static LanguageManager languageManager;
     private Map<String, Map<String, String>> languages;
     private String currentLanguage;
     private final String[] supportedLanguages = {"es", "en", "fr"};
     
-    private LanguageManager() {
+    public LanguageManager() {
         languages = new HashMap<>();
         currentLanguage = "es"; // Idioma por defecto
         loadLanguages();
     }
     
     public static LanguageManager getInstance() {
-        if (instance == null) {
-            instance = new LanguageManager();
+        if (languageManager == null) {
+            languageManager = new LanguageManager();
         }
-        return instance;
+        return languageManager;
     }
 
 private void loadLanguages() {
@@ -65,6 +65,11 @@ private void loadLanguages() {
             
            
         }
+    }
+    
+    public void reloadLanguages() {
+        languages.clear(); 
+        loadLanguages();   
     }
     
     public String getText(String key) {

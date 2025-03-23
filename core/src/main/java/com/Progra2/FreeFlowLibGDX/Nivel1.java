@@ -19,6 +19,7 @@ public class Nivel1 extends Nivel {
     public Nivel1(int sizeGrid, float tiempoLimite, Usuario jugador, FlowFreeGame FlowFree) {
         super(sizeGrid, tiempoLimite, jugador,FlowFree,90);
         this.grid = new int[sizeGrid][sizeGrid];
+        this.numeroNivel=1;
        
     }
 
