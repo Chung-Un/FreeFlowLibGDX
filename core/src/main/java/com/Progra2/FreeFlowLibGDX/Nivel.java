@@ -8,6 +8,7 @@ package com.Progra2.FreeFlowLibGDX;
 import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
 import static com.Progra2.flowfree.flowfreegame.LanguageManager.languageManager;
 import com.Progra2.flowfree.model.Usuario;
+import com.Progra2.flowfree.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -74,7 +75,7 @@ public abstract class Nivel implements InputProcessor{
     protected double tiempoLimite;
     private InputMultiplexer multipleInput;
     private int dotFinalX, dotFinalY; 
-    protected Music music;
+    public static Music musicNivel;
     public boolean todosNivelesCompletados;
     private long tiempoJugado;
     protected HashSet<Par> celdasOcupadas;
@@ -122,8 +123,8 @@ public abstract class Nivel implements InputProcessor{
         labelTimer.setPosition(10, Gdx.graphics.getHeight() - 30);
         stage.addActor(labelTimer);
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("musicnivel.mp3"));
-        music.setVolume(jugador.getVolumenMusica());
+        musicNivel = Gdx.audio.newMusic(Gdx.files.internal("musicnivel.mp3"));
+        musicNivel.setVolume(jugador.getVolumenMusica());
        
         
         ImageButton.ImageButtonStyle btnRegresarStyle = new ImageButton.ImageButtonStyle();
@@ -206,7 +207,7 @@ public abstract class Nivel implements InputProcessor{
         } else if(jugador.nivelesCompletados>5){
             jugador.actualizarEstadisticas(0, tiempoJugado);
         }
-        jugador.tiemposPorNivel.set(numeroNivel, (tiempoLimite - tiempoRestante));
+        jugador.tiemposPorNivel.set(numeroNivel-1, (tiempoLimite - tiempoRestante));
     }
 }
 
@@ -287,7 +288,7 @@ public abstract class Nivel implements InputProcessor{
             tiempoJugado =(long) (tiempoLimite - tiempoRestante);
             if(todosNivelesCompletados){
                 JOptionPane.showMessageDialog(null, languageManager.getText("todos_completos"), ">0<", JOptionPane.INFORMATION_MESSAGE);
-//                FlowFree.setScreen(new GameScreen(FlowFree,jugador));
+                  FlowFree.setScreen(new GameScreen(FlowFree,jugador));
             }
             PantallaJuego.manejoNivel.getNivelActual();
             disposeNivel();
@@ -317,7 +318,7 @@ public abstract class Nivel implements InputProcessor{
         
         detenerHiloTiempo(); 
         detenerHiloColisiones();
-        music.dispose();
+        musicNivel.dispose();
         inicializar(); 
         this.calcularOffsets();
         
@@ -360,7 +361,6 @@ public abstract class Nivel implements InputProcessor{
             labelTimer.setText(languageManager.getText("tiempo_restante") + tiempoRestante);
 
             if (tiempoRestante <= 0) {
-                System.out.println("Tiempo agotado!");
                 detenerHiloTiempo();
             }
         }
@@ -412,23 +412,26 @@ protected void detenerHiloTiempo() {
         int fila = posicion[1];
         int col = posicion[0];
 
-        System.out.println("Dot inicialx" + dotInicialX + "dotFinalX" + dotInicialX);
-        System.out.println("Dot final x" + dotFinalX + "Dot final y"+ dotFinalY );
         //skippeamos las dots finales e iniciales de la conexion
         if ((col ==dotInicialX && fila == dotInicialY) || (col ==dotFinalX && fila == dotFinalY)){
             System.out.println("Se chequea como iniciales y finales" + fila + ","+col);
             continue;
         }
         
-                System.out.println("Checking cell: (" + fila + ", " + col + ")");
-                        System.out.println("Grid value: " + grid[fila][col]);
-        System.out.println("Celdas Ocupadas contains: " + celdasOcupadas.contains(new Par(col, fila)));
-
-        if(grid[fila][col] ==1){
-            System.out.println("Hay un dot en" + fila + "," + col );
-            return true;
+        if (numeroNivel!=5){
+            if(grid[fila][col]==1){
+                System.out.println("Hay un 1 ");
+                return true;
+            } 
+            
+        }else{
+            
         }
         
+        if(grid[fila][col]==2){
+            return true;
+        }
+
         if(celdasOcupadas.contains(new Par(col,fila))){
             System.out.println("Celda ocupada en" + fila + "," + col);
             return true;
@@ -464,8 +467,6 @@ protected void detenerHiloTiempo() {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         
-//        System.out.println("Touch down size grid: " + PantallaJuego.manejoNivel.getNivelActual().sizeGrid);
-//        System.out.println("size celda actual : " + PantallaJuego.manejoNivel.getNivelActual().sizeCelda +  "offsetX y offsety" + offSetX + "," + offSetY);
         int sizeGridActual = PantallaJuego.manejoNivel.getNivelActual().sizeGrid;
         
         Vector2 posicionTocada = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
@@ -473,10 +474,7 @@ protected void detenerHiloTiempo() {
         int col = (int) ((posicionTocada.x - PantallaJuego.manejoNivel.getNivelActual().offSetX) / PantallaJuego.manejoNivel.getNivelActual().sizeCelda);
         int fila = sizeGridActual - 1 - (int) ((posicionTocada.y - PantallaJuego.manejoNivel.getNivelActual().offSetY) / 
                 PantallaJuego.manejoNivel.getNivelActual().sizeCelda);
-//
-//        System.out.println("Touched screen: (" + screenX + ", " + screenY + ")");
-//        System.out.println("Touched grid: (" + fila + ", " + col + ")"); // Debug
-//               
+               
         
         if ((col >= 0 && col < sizeGridActual) && (fila >= 0 && fila < sizeGridActual)) { //si esta en bounds
             Conexion conexionClicked = getConexionSeleccionada(col, fila);
@@ -534,12 +532,10 @@ protected void detenerHiloTiempo() {
                     if (!verificarColisiones(tempPath)) {
                         PantallaJuego.manejoNivel.getNivelActual().pathActual.add(new int[]{col, fila});
                     } else {
-                        System.out.println("Colision detectada, no se puede dibujar aquí");
                         colisionDetectada = true;
                         return true;
                     }
                 } else {
-                    System.out.println("Movimiento diagonal no permitido");
                 }
             } else {
                 PantallaJuego.manejoNivel.getNivelActual().pathActual.add(new int[]{col, fila});
@@ -557,7 +553,6 @@ protected void detenerHiloTiempo() {
     imprimirGrid();
     if (isDragging) {
         if(colisionDetectada){
-            System.out.println("Colision AAAA");
             isDragging = false;
             PantallaJuego.manejoNivel.getNivelActual().pathActual = null;
             colisionDetectada = false;
@@ -574,6 +569,12 @@ protected void detenerHiloTiempo() {
             Punto dotInicial = PantallaJuego.manejoNivel.getNivelActual().gridPuntos[dotInicialY][dotInicialX];
             Punto dotFinal = PantallaJuego.manejoNivel.getNivelActual().gridPuntos[fila][col];
 
+            if (dotInicialX == col && dotInicialY == fila) {
+                isDragging = false;
+                PantallaJuego.manejoNivel.getNivelActual().pathActual = null;
+                return true;
+            }
+
             if (dotFinal != null && dotFinal.getColor().equals(dotInicial.getColor())) {
                 if (PantallaJuego.manejoNivel.getNivelActual().pathActual != null &&
                         !PantallaJuego.manejoNivel.getNivelActual().pathActual.isEmpty() &&
@@ -582,13 +583,14 @@ protected void detenerHiloTiempo() {
                         PantallaJuego.manejoNivel.getNivelActual().grid[posicion[1]][posicion[0]] = 2; 
                         celdasOcupadas.add(new Par(posicion[0],posicion[1]));
                     }
-                    
+                    if (dotFinal != null && dotFinal.getColor().equals(dotInicial.getColor())) {
                     PantallaJuego.manejoNivel.getNivelActual().conexiones.add(new Conexion(dotInicial, dotFinal,
                     PantallaJuego.manejoNivel.getNivelActual().pathActual));
                     dotInicial.conectado = true;
                     dotFinal.conectado = true;
                     System.out.println("Puntos " + dotFinal.getColor() + " conectados");
                     System.out.println("Path: " + PantallaJuego.manejoNivel.getNivelActual().pathActual);
+                    }
                 } else {
                     
                     System.out.println("Path no es valido");

@@ -53,6 +53,10 @@ public class PantallaMapa implements Screen{
     private Usuario jugador;
     
     public PantallaMapa(FlowFreeGame FlowFree, Usuario jugador){
+        if (Nivel.musicNivel!=null){
+            Nivel.musicNivel.stop();
+        }
+        
         this.FlowFree = FlowFree;
         stage = new Stage(new ScreenViewport());
         this.jugador = jugador;

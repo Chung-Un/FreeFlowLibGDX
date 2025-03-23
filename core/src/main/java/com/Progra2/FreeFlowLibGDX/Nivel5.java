@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.Color;
  */
 public class Nivel5 extends Nivel {
     public Nivel5(int sizeGrid, double tiempoLimite, Usuario jugador, FlowFreeGame FlowFree){
-        super(sizeGrid, tiempoLimite, jugador, FlowFree,50);
+        super(sizeGrid, tiempoLimite, jugador, FlowFree,45);
         this.grid= new int[sizeGrid][sizeGrid];
         this.numeroNivel=5;
         
@@ -57,7 +57,8 @@ public class Nivel5 extends Nivel {
             System.out.println("punto en " + punto.getFila() + "," + punto.getCol());
 
         }
-
+        
+       
         //Debug
         for (int i = 0; i < sizeGrid; i++) {
         for (int j = 0; j < sizeGrid; j++) {
@@ -65,11 +66,13 @@ public class Nivel5 extends Nivel {
         }
         System.out.println();
         }
+        
+        
         iniciarHiloTiempo();
         iniciarHiloColisiones();
-        music.setLooping(true);
-        music.setVolume(0.5f);
-        music.play();
+        musicNivel.setLooping(true);
+        musicNivel.setVolume(0.5f);
+        musicNivel.play();
     
     }
 
@@ -88,8 +91,8 @@ public class Nivel5 extends Nivel {
         texturaRed.dispose();
         detenerHiloTiempo();
         detenerHiloColisiones();
-        music.stop();
-        music.dispose();
+        musicNivel.stop();
+        musicNivel.dispose();
     }
 
     @Override

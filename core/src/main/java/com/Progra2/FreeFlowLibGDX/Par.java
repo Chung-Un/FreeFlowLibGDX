@@ -29,6 +29,6 @@ public class Par {
     
     @Override
     public int hashCode(){
-        return Objects.hash(col,fila);
+        return 31*fila*col;
     }
 }

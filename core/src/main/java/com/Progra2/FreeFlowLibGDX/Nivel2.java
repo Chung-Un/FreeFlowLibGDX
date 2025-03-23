@@ -59,9 +59,9 @@ public class Nivel2 extends Nivel{
         }
         iniciarHiloTiempo();
         iniciarHiloColisiones();
-        music.setLooping(true);
-        music.setVolume(0.5f);
-        music.play();
+        musicNivel.setLooping(true);
+        musicNivel.setVolume(0.5f);
+        musicNivel.play();
     }
 
     
@@ -76,7 +76,7 @@ public class Nivel2 extends Nivel{
         texturaPurple.dispose();
         detenerHiloTiempo();
         detenerHiloColisiones();
-        music.dispose();
+        musicNivel.dispose();
     }
 
    @Override
