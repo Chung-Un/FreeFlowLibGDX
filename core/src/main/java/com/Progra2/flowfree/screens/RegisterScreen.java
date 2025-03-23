@@ -28,6 +28,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
  *
  * @author Nadiesda Fuentes
  */
+
 public class RegisterScreen implements Screen {
     private FlowFreeGame game;
     private Stage stage;

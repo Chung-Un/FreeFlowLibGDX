@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author Nadiesda Fuentes
@@ -103,6 +104,22 @@ public class Usuario implements Serializable {
 
         guardarDatos();
     }
+
+    // Método para cambiar la contraseña del usuario
+    public boolean cambiarPassword(String passwordActual, String nuevaPassword) {
+    // Verificar que la contraseña actual sea correcta
+    if (!verificarPassword(passwordActual)) {
+        return false; // La contraseña actual no coincide
+    }
+    
+    // Actualizar la contraseña con el nuevo hash
+    this.passwordHash = hashPassword(nuevaPassword);
+    
+    // Guardar los cambios
+    guardarDatos();
+    
+    return true; // Cambio exitoso
+}
 
 // Método para obtener el tiempo promedio por nivel
     public double getTiempoPromedioPorNivel() {
