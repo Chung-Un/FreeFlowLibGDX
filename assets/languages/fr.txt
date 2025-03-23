@@ -45,6 +45,14 @@ volumen=Volume
 guardar_volumen=Enregistrer les paramètres de volume
 avatar_seleccionadoExito=Avatar a sélectionné avec succès!
 nivel=Niveau
+cambiar_password=Changer de Mot de Passe
+password_actual=Mot de Passe Actuel:
+password_nueva=Nouveau Mot de Passe:
+confirmar_password=Confirmer le Mot de Passe:
+cambiar=Changer
+password_no_coincide=Les mots de passe ne correspondent pas
+password_cambiada=Mot de passe changé avec succès
+password_actual_incorrecta=Mot de passe actuel incorrect
 
 
 

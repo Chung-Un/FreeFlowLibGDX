@@ -45,4 +45,12 @@ volumen=Volume
 guardar_volumen=Save volume settings
 avatar_seleccionadoExito=Avatar has been selected successfully!
 nivel=Level
+cambiar_password=Change Password
+password_actual=Current Password:
+password_nueva=New Password:
+confirmar_password=Confirm Password:
+cambiar=Change
+password_no_coincide=Passwords don't match
+password_cambiada=Password changed successfully
+password_actual_incorrecta=Current password incorrect
 
