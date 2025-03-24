@@ -198,7 +198,6 @@ public abstract class Nivel implements InputProcessor{
     labelTimer.setText("Tiempo: " + (int) tiempoRestante);
 
     if (todosPuntosConectados()) {
-        imprimirGrid();
         nivelCompletado = true;
         mostrarMensajeCompletacion = true;
         detenerHiloTiempo();
@@ -233,7 +232,7 @@ public abstract class Nivel implements InputProcessor{
         //para conexiones
         for (Conexion conexion : conexiones) {
             if (conexion == PantallaJuego.conexionHovered) {
-            renderer.setColor(Color.GRAY); // Change color for hovered conexion
+            renderer.setColor(Color.GRAY); //cambiamos el color de la conexion hovered
         } else {
             renderer.setColor(conexion.getColor());
         }
@@ -264,16 +263,7 @@ public abstract class Nivel implements InputProcessor{
         }
         batch.end();
         
-        //DEBUG
-         renderer.begin(ShapeRenderer.ShapeType.Line);
-        renderer.setColor(Color.RED);
-        for (Punto punto : puntos) {
-            float x = offSetX + punto.getCol() * sizeCelda;
-            float y = offSetY + (sizeCelda * (sizeGrid - 1 - punto.getFila()));
-            renderer.rect(x, y, sizeCelda, sizeCelda); // Draw a rectangle around the dot
-        }
-        renderer.end();
-       
+
         //para el timer
         batch.begin();
         stage.act(Gdx.graphics.getDeltaTime()); 
@@ -547,10 +537,8 @@ protected void detenerHiloTiempo() {
 }
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) { 
-    PantallaJuego.conexionHovered = null; // Clear hover state
+    PantallaJuego.conexionHovered = null; 
     
-    
-    imprimirGrid();
     if (isDragging) {
         if(colisionDetectada){
             isDragging = false;
@@ -588,18 +576,14 @@ protected void detenerHiloTiempo() {
                     PantallaJuego.manejoNivel.getNivelActual().pathActual));
                     dotInicial.conectado = true;
                     dotFinal.conectado = true;
-                    System.out.println("Puntos " + dotFinal.getColor() + " conectados");
-                    System.out.println("Path: " + PantallaJuego.manejoNivel.getNivelActual().pathActual);
                     }
                 } else {
-                    
-                    System.out.println("Path no es valido");
+                   
                 }
             }
         }
         isDragging = false;
-        PantallaJuego.manejoNivel.getNivelActual().pathActual = null; // Ensure pathActual is cleared at the end
-        imprimirGrid();
+        PantallaJuego.manejoNivel.getNivelActual().pathActual = null; 
         return true;
     }
     return false;
@@ -614,7 +598,6 @@ protected void detenerHiloTiempo() {
         if (fila < 0 || fila >= PantallaJuego.manejoNivel.getNivelActual().sizeGrid ||
             col < 0 || col >= PantallaJuego.manejoNivel.getNivelActual().sizeGrid ||
             grid[fila][col] == 2) {
-            System.out.println("Path no es valido porque hay un 2 en " + fila + col);
             return false;
         }
     }
@@ -624,14 +607,11 @@ protected void detenerHiloTiempo() {
    public void seleccionDots(int fila, int col, Color color) {
         if (puntoSeleccionado == null) { //primer dot seleccionado
             puntoSeleccionado = new Punto(fila, col, color);
-            System.out.println("Seleccionado dot en row(" + fila + ") y col{" + col + ")");
         } else {
             if(puntoSeleccionado.getColor().equals(color)){
-            System.out.println("Intenta conectar");
             puntoSeleccionado = null;
             }
             else{
-            System.out.println("Colores no son iguales");
             }
             puntoSeleccionado = null;
         }
@@ -701,7 +681,6 @@ protected void detenerHiloTiempo() {
    protected void calcularOffsets() {
     offSetX = (Gdx.graphics.getWidth() - PantallaJuego.manejoNivel.getNivelActual().sizeCelda * sizeGrid) / 2;
     offSetY = (Gdx.graphics.getHeight() -PantallaJuego.manejoNivel.getNivelActual().sizeCelda * sizeGrid) / 2;
-        System.out.println("**CALCULAR OFFSETS**\nsizeCelda: " + PantallaJuego.manejoNivel.getNivelActual().sizeCelda + ", offSetX: " + offSetX + ", offSetY: " + offSetY);
 
 }
 }

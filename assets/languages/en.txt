@@ -53,4 +53,4 @@ cambiar=Change
 password_no_coincide=Passwords don't match
 password_cambiada=Password changed successfully
 password_actual_incorrecta=Current password incorrect
-
+partidas_totales=Total matches

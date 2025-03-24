@@ -53,7 +53,6 @@ public class MenuScreen implements Screen {
         }
         musicMain.play();
         
-        // Cargar Skin (puedes usar "uiskin.json" de libGDX o crear uno personalizado)
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
         Texture texturaFondo = new Texture(Gdx.files.internal("FotoFondo.png")); 
@@ -69,9 +68,6 @@ public class MenuScreen implements Screen {
         stage.addActor(imgFondo);
         stage.addActor(imgTitulo);
         
-        
-        // Crear elementos UI
-
         userField = new TextField("", skin);
         passField = new TextField("", skin);
         passField.setPasswordMode(true);
@@ -88,8 +84,6 @@ public class MenuScreen implements Screen {
         imgFondo = new Image(texturaFondo);
         imgFondo.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         
-        
-        // Layout con Table
         Table table = new Table();
         table.setFillParent(true);
         table.add(labelUsuario).padTop(80).left();
@@ -100,12 +94,9 @@ public class MenuScreen implements Screen {
         table.add(registerButton).colspan(2).padBottom(10).row();
         table.add(btnIdiomas).colspan(2).padBottom(10).row();
         table.add(btnSalir).colspan(2).padBottom(10).row();
-       
-        
-        
+               
         stage.addActor(table);
 
-        // Eventos de los botones
         loginButton.addListener(new ClickListener() {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
@@ -132,7 +123,6 @@ public class MenuScreen implements Screen {
          btnIdiomas.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Button clicked!"); // Debug statement
                 String[] opciones  = new String[]{"Spanish","English", "French"};
                 int opcion = JOptionPane.showOptionDialog(null, languageManager.getText("settings_idioma"), " ", JOptionPane.DEFAULT_OPTION
                 , JOptionPane.QUESTION_MESSAGE, null, opciones, opciones[0]);

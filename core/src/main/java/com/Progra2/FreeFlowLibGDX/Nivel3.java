@@ -23,7 +23,6 @@ public class Nivel3 extends Nivel{
     @Override
     public void inicializar() {
         this.calcularOffsets();
-         System.out.println("Inicializando nivel 3");
         for (int i = 0; i < sizeGrid; i++) {
             for (int j = 0; j < sizeGrid; j++) {
                 grid[i][j] = 0; 
@@ -44,17 +43,9 @@ public class Nivel3 extends Nivel{
         for(Punto punto : puntos){
             grid[punto.getFila()][punto.getCol()] = 1; //significa que contiene un punto
             gridPuntos[punto.getFila()][punto.getCol()] = punto; //colocar el punto donde debe estar
-            System.out.println("punto en " + punto.getFila() + "," + punto.getCol());
 
         }
 
-        //Debug
-        for (int i = 0; i < sizeGrid; i++) {
-        for (int j = 0; j < sizeGrid; j++) {
-            System.out.print(grid[i][j] + " ");
-        }
-        System.out.println();
-        }
         iniciarHiloTiempo();
         iniciarHiloColisiones();
         musicNivel.setLooping(true);

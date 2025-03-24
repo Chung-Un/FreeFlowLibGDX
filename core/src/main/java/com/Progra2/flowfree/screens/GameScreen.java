@@ -57,10 +57,12 @@ public class GameScreen implements Screen {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
 
-        // Mostrar estadísticas del usuario
+        // mostrar estadísticas del usuario
         statsLabel = new Label(
             languageManager.getText("niveles_completados") + ": " + usuario.getNivelesCompletados() + "\n" +
             languageManager.getText("tiempo_jugado")+": " + usuario.getTiempoJugado() + "s\n" +
+            languageManager.getText("partidas_totales")+": " + usuario.partidasTotales+
+//            languageManager.getText("ultima_Sesion")+": " + 
             languageManager.getText("tiempo_promedio")+": " + String.format("%.2f", usuario.getTiempoPromedioPorNivel()) + "s\n", 
             skin
         );

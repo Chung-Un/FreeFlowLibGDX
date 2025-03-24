@@ -26,7 +26,6 @@ public class Nivel1 extends Nivel {
     @Override
     public void inicializar() {
         this.calcularOffsets();
-        System.out.println("Inciando el nivel 1");
         //el grid se resettea
         for (int i = 0; i < sizeGrid; i++) {
             for (int j = 0; j < sizeGrid; j++) {
@@ -48,12 +47,8 @@ public class Nivel1 extends Nivel {
         for(Punto punto : puntos){
             grid[punto.getFila()][punto.getCol()] = 1; //significa que contiene un punto
             gridPuntos[punto.getFila()][punto.getCol()] = punto; //colocar el punto donde debe estar
-            System.out.println("punto en " + punto.getFila() + "," + punto.getCol());
-
         }
 
-        //Debug
-        imprimirGrid();
         iniciarHiloTiempo();
         iniciarHiloColisiones();
         musicNivel.setLooping(true);

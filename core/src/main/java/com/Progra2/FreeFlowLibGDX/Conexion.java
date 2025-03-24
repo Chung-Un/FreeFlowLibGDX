@@ -24,12 +24,6 @@ public class Conexion {
     this.punto2 = punto2;
     this.color = punto1.getColor();
     this.path = new ArrayList<>(path);
-
-    System.out.println("Connection created:");
-    System.out.println("Punto1: (" + punto1.getFila() + ", " + punto1.getCol() + ")");
-    System.out.println("Punto2: (" + punto2.getFila() + ", " + punto2.getCol() + ")");
-    System.out.println("Color: " + color);
-    System.out.println("Path: " + path);
 }
 
     public List<int[]> getPath() {

@@ -40,19 +40,18 @@ public class ChangePasswordScreen implements Screen {
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         
-        // Establecer música si es necesario
         if (MenuScreen.musicMain != null && !MenuScreen.musicMain.isPlaying()) {
             MenuScreen.musicMain.setVolume(usuarioActual.getVolumenMusica());
             MenuScreen.musicMain.play();
         }
         
-        // Fondo
+        //fondo
         Texture texturaFondo = new Texture(Gdx.files.internal("FotoFondo.png")); 
         Image imgFondo = new Image(texturaFondo);
         imgFondo.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.addActor(imgFondo);
         
-        // Crear elementos UI
+        //crear elementos UI
         Label titleLabel = new Label(languageManager.getText("cambiar_password") != null ? 
                 languageManager.getText("cambiar_password") : "Cambiar Contraseña", skin);
         titleLabel.setFontScale(2);
@@ -76,7 +75,7 @@ public class ChangePasswordScreen implements Screen {
         messageLabel = new Label("", skin);
         messageLabel.setWrap(true);
 
-        // Tabla para organizar los elementos
+        //tabla para organizar los elementos
         Table table = new Table();
         table.setFillParent(true);
         table.center();
@@ -99,8 +98,7 @@ public class ChangePasswordScreen implements Screen {
         table.add(messageLabel).width(300).center().row();
 
         stage.addActor(table);
-
-        // Acción del botón "Cambiar"
+        
         changeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -108,7 +106,6 @@ public class ChangePasswordScreen implements Screen {
             }
         });
 
-        // Acción del botón "Volver" - MODIFICADO para usar MenuScreen en lugar de ProfileScreen
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -117,38 +114,32 @@ public class ChangePasswordScreen implements Screen {
         });
     }
 
-    // Método para cambiar la contraseña
     private void cambiarPassword() {
         String passwordActual = currentPasswordField.getText();
         String nuevaPassword = newPasswordField.getText();
         String confirmarPassword = confirmPasswordField.getText();
 
-        // Validar que los campos no estén vacíos
         if (passwordActual.isEmpty() || nuevaPassword.isEmpty() || confirmarPassword.isEmpty()) {
             messageLabel.setText(languageManager.getText("campos"));
             return;
         }
 
-        // Verificar que las nuevas contraseñas coincidan
         if (!nuevaPassword.equals(confirmarPassword)) {
             messageLabel.setText(languageManager.getText("password_no_coincide") != null ? 
                     languageManager.getText("password_no_coincide") : "Las contraseñas no coinciden");
             return;
         }
         
-        // Cambiar la contraseña usando el método de Usuario
         boolean cambioExitoso = usuarioActual.cambiarPassword(passwordActual, nuevaPassword);
         
         if (cambioExitoso) {
             messageLabel.setText(languageManager.getText("password_cambiada") != null ? 
                     languageManager.getText("password_cambiada") : "Contraseña cambiada exitosamente");
             
-            // Limpiar campos
             currentPasswordField.setText("");
             newPasswordField.setText("");
             confirmPasswordField.setText("");
             
-            // MODIFICADO: volver a MenuScreen después de un retraso en lugar de ProfileScreen
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {

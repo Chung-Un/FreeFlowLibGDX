@@ -29,6 +29,6 @@ public class Par {
     
     @Override
     public int hashCode(){
-        return 31*fila*col;
+        return 31*fila*col; //31, numero impar primo para evitar valores hash repetidos
     }
 }

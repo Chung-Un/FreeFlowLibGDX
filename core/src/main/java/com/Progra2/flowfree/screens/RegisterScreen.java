@@ -52,7 +52,6 @@ public class RegisterScreen implements Screen {
         
         stage.addActor(imgFondo);
         
-        // Crear elementos UI
         Label titleLabel = new Label(languageManager.getText("registro_titulo"), skin);
         titleLabel.setFontScale(2);
 
@@ -67,7 +66,6 @@ public class RegisterScreen implements Screen {
 
         messageLabel = new Label("", skin);
 
-        // Tabla para organizar los elementos
         Table table = new Table();
         table.setFillParent(true);
         table.center();
@@ -84,7 +82,6 @@ public class RegisterScreen implements Screen {
 
         stage.addActor(table);
 
-        // Acción del botón "Registrarse"
         registerButton.addListener(new ClickListener() {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
@@ -92,7 +89,6 @@ public class RegisterScreen implements Screen {
             }
         });
 
-        // Acción del botón "Volver"
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
@@ -102,37 +98,32 @@ public class RegisterScreen implements Screen {
         
     }
 
-    // Método para registrar un usuario
     private void registrarUsuario() {
         String nombreCompleto = nameField.getText();
         String nombreUsuario = userField.getText();
         String password = passField.getText();
 
-        // Validar que los campos no estén vacíos
         if (nombreCompleto.isEmpty() || nombreUsuario.isEmpty() || password.isEmpty()) {
             messageLabel.setText(languageManager.getText("campos"));
             return;
         }
 
-        // Verificar si el usuario ya existe
         File userFile = new File("usuarios/" + nombreUsuario + ".dat");
         if (userFile.exists()) {
             messageLabel.setText(languageManager.getText("repetido"));
             return;
         }
        
-        //Avatar
         File avatarsFolder = new File("avatars");
         if (!avatarsFolder.exists()) {
             avatarsFolder.mkdirs();
         }
     
-        // Crear y guardar el nuevo usuario
+        // crear y guardar el nuevo usuario
         Usuario nuevoUsuario = new Usuario(nombreUsuario, password, nombreCompleto);
         nuevoUsuario.guardarDatos();
         messageLabel.setText(languageManager.getText("registro_exito"));
         
-        // Esperar un momento antes de volver al menú
         Gdx.app.postRunnable(() -> game.setScreen(new MenuScreen(game)));
     }
 

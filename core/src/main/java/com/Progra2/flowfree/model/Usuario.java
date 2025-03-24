@@ -36,16 +36,13 @@ public class Usuario implements Serializable {
     private String avatarPersonalizadoDireccion;
     private LocalDateTime fechaRegistro;
     private LocalDateTime ultimaSesion;
-    public int nivelesCompletados;
+    public int nivelesCompletados,partidasTotales;
     private long tiempoJugado;
     private List<String> historialPartidas;
     private Map<String, String> preferencias;
     private String avatar;
-    private int puntuacionGeneral;
     private float volumenMusica;
     public ArrayList<Double> tiemposPorNivel;
-
-    
 
     public Usuario(String nombreUsuario, String password, String nombreCompleto) {
         this.idUsuario = UUID.randomUUID().toString();
@@ -60,15 +57,14 @@ public class Usuario implements Serializable {
         this.preferencias = new HashMap<>();
         this.avatar = "default.png";
         this.avatarPersonalizadoDireccion=null;
-        this.puntuacionGeneral = 0;
-        this.volumenMusica = 1f;//a la mitad por default
+        this.volumenMusica = 1f;
         this.tiemposPorNivel =new ArrayList<>();
         for( int i=0; i<5 ; i++){
             tiemposPorNivel.add(0.0);
         }
     }
 
-    // Método para cifrar la contraseña con SHA-256
+    // metodo para cifrar la contraseña con SHA-256(algoritmo de hash criptografico)
     private String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -83,53 +79,50 @@ public class Usuario implements Serializable {
         }
     }
 
-    // Método para verificar la contraseña ingresada por el usuario
+    // metodo para verificar la password ingresada por el usuario
     public boolean verificarPassword(String passwordIngresada) {
         return this.passwordHash.equals(hashPassword(passwordIngresada));
     }
 
-    // Actualiza estadísticas y registra la partida
+    // actualiza estadísticas y registra la partida
     public void actualizarEstadisticas(int nuevosNiveles, long tiempoSesion) {
         this.nivelesCompletados += nuevosNiveles;
         this.tiempoJugado += tiempoSesion;
-//        this.puntuacionGeneral += puntosObtenidos;
         this.ultimaSesion = LocalDateTime.now();
+        this.partidasTotales+=1;
 
-        // Registrar en el historial
+        // registrar en el historial
         this.historialPartidas.add("Fecha: " + ultimaSesion
                 + ", Niveles: " + nuevosNiveles
                 + ", Tiempo: " + tiempoSesion + "s"
-//                + ", Puntos: " + puntosObtenidos
                 + ", Tiempo Promedio por Nivel: " + getTiempoPromedioPorNivel() + "s");
 
         guardarDatos();
     }
 
-    // Método para cambiar la contraseña del usuario
+    // metodo para cambiar la password del usuario
     public boolean cambiarPassword(String passwordActual, String nuevaPassword) {
-    // Verificar que la contraseña actual sea correcta
+    // verificar que la password actual sea correcta
     if (!verificarPassword(passwordActual)) {
-        return false; // La contraseña actual no coincide
+        return false; //password actual no coincide
     }
     
-    // Actualizar la contraseña con el nuevo hash
+    // actualizar la password con el nuevo hash
     this.passwordHash = hashPassword(nuevaPassword);
-    
-    // Guardar los cambios
     guardarDatos();
     
-    return true; // Cambio exitoso
+    return true; // se cambio exitosamente
 }
 
-// Método para obtener el tiempo promedio por nivel
+// metodo para obtener el tiempo promedio por nivel
     public double getTiempoPromedioPorNivel() {
         if (nivelesCompletados == 0) {
-            return 0; // Evitar división por cero
+            return 0; // evitar division por cero
         }
         return (double) getTiemposPorNivelTotal() / nivelesCompletados;
     }
 
-    // Método para establecer preferencias del usuario
+    // metodo para establecer preferencias del usuario
     public void setPreferencia(String clave, String valor) {
         this.preferencias.put(clave, valor);
         guardarDatos();
@@ -144,7 +137,7 @@ public class Usuario implements Serializable {
     }
     
     
-    // Método para establecer avatar
+    // metodo para establecer avatar
     public void setAvatar(String avatarPath) {
         this.avatar = avatarPath;
         this.avatarPersonalizadoDireccion=null;
@@ -172,7 +165,7 @@ public class Usuario implements Serializable {
     }
 
 
-    // Método para eliminar usuario
+    // metodo para eliminar usuario
     public void eliminarCuenta() {
         File archivo = new File("usuarios/" + nombreUsuario + ".dat");
         if (archivo.exists()) {
@@ -192,13 +185,13 @@ public class Usuario implements Serializable {
 
     public void guardarDatos() {
         try {
-            // Crear la carpeta "usuarios" si no existe
+            // crear la carpeta usuarios si no existe
             File carpeta = new File("usuarios");
             if (!carpeta.exists()) {
                 carpeta.mkdirs();
             }
 
-            // Guardar el archivo en la carpeta "usuarios"
+            // guardar el archivo en la carpeta 
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("usuarios/" + nombreUsuario + ".dat"))) {
                 oos.writeObject(this);
             }
@@ -230,7 +223,7 @@ public class Usuario implements Serializable {
     }
     
 
-    // Getters para estadísticas
+    // getters para estadísticas
     
     public String getNombreUsuario(){
         return nombreUsuario;
@@ -246,10 +239,6 @@ public class Usuario implements Serializable {
 
     public long getTiempoJugado() {
         return tiempoJugado;
-    }
-
-    public int getPuntuacionGeneral() {
-        return puntuacionGeneral;
     }
 
     public List<String> getHistorialPartidas() {

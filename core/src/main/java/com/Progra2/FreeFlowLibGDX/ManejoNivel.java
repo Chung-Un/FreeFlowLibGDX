@@ -8,7 +8,6 @@ package com.Progra2.FreeFlowLibGDX;
 import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
 import com.Progra2.flowfree.model.Usuario;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -40,10 +39,8 @@ public class ManejoNivel {
     public  void avanzarNivel() {
     if (nivelActual < niveles.size() - 1) {
         nivelActual++;
-        System.out.println("Advanced to Level " + nivelActual + " with Grid Size: " + getNivelActual().sizeGrid);
     } else {
         getNivelActual().todosNivelesCompletados = true;
-        System.out.println("All levels completed.");
     }
 }
 

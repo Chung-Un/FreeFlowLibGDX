@@ -17,7 +17,7 @@ public class LanguageManager {
     
     public LanguageManager() {
         languages = new HashMap<>();
-        currentLanguage = "es"; // Idioma por defecto
+        currentLanguage = "es"; // idioma por defecto
         loadLanguages();
     }
     
@@ -31,10 +31,9 @@ public class LanguageManager {
 private void loadLanguages() {
     for (String lang : supportedLanguages) {
         try {
-            // Para libGDX, usa esto:
             FileHandle fileHandle = Gdx.files.internal("languages/" + lang + ".txt");
             if (!fileHandle.exists()) {
-                System.err.println("No se encontró el archivo de idioma: " + lang);
+                //no se encontro ningun idioma
                 continue;
             }
             
@@ -77,7 +76,7 @@ private void loadLanguages() {
         if (currentTranslations != null && currentTranslations.containsKey(key)) {
             return currentTranslations.get(key);
         }
-        return key; // Devolver la clave si no se encuentra traducción
+        return key; // devolver la clave si no se encuentra traduccion
     }
     
     public String[] getSupportedLanguages() {
@@ -88,7 +87,7 @@ private void loadLanguages() {
         return currentLanguage;
     }
 
-    // Método para obtener el nombre del idioma a partir del código
+    // obtener el nombre del idioma a partir del código
     public String getLanguageName(String code) {
         Map<String, String> names = new HashMap<>();
         names.put("es", "Español");
