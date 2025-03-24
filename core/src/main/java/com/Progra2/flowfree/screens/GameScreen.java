@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.Progra2.flowfree.screens;
 
 import com.Progra2.FreeFlowLibGDX.PantallaMapa;
@@ -19,6 +15,7 @@ import com.Progra2.flowfree.flowfreegame.FlowFreeGame;
 import static com.Progra2.flowfree.flowfreegame.LanguageManager.languageManager;
 import com.Progra2.flowfree.model.Ranking;
 import com.Progra2.flowfree.model.Usuario;
+import com.Progra2.flowfree.model.Partida;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -26,10 +23,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import java.awt.Dimension;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -56,13 +56,19 @@ public class GameScreen implements Screen {
         
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
+        // Formatear la última sesión del usuario
+        String ultimaSesion = "N/A";
+        if (usuario.getUltimaFechaLogin() != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            ultimaSesion = sdf.format(usuario.getUltimaFechaLogin());
+        }
 
-        // mostrar estadísticas del usuario
+        // mostrar estadísticas del usuario incluyendo última sesión
         statsLabel = new Label(
             languageManager.getText("niveles_completados") + ": " + usuario.getNivelesCompletados() + "\n" +
             languageManager.getText("tiempo_jugado")+": " + usuario.getTiempoJugado() + "s\n" +
-            languageManager.getText("partidas_totales")+": " + usuario.partidasTotales+
-//            languageManager.getText("ultima_Sesion")+": " + 
+            languageManager.getText("partidas_totales")+": " + usuario.partidasTotales + "\n" +
+            languageManager.getText("ultima_Sesion")+": " + ultimaSesion + "\n" +
             languageManager.getText("tiempo_promedio")+": " + String.format("%.2f", usuario.getTiempoPromedioPorNivel()) + "s\n", 
             skin
         );
@@ -129,6 +135,15 @@ public class GameScreen implements Screen {
             }
         });
         
+        // Nuevo botón para historial de partidas
+        Button btnHistorial = new TextButton(languageManager.getText("historial_partidas"), skin);
+        btnHistorial.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                mostrarHistorialPartidas();
+            }
+        });
+        
         Button btnAvatar= new TextButton(languageManager.getText("avatar_seleccion"),skin);
         btnAvatar.addListener(new ClickListener() {
             @Override
@@ -159,8 +174,6 @@ public class GameScreen implements Screen {
             }
         });
         
-        
-        
         volumenSlider = new Slider(0,1,0.1f,false,skin);
         volumenSlider.setValue(usuario.getVolumenMusica());
         
@@ -185,11 +198,46 @@ public class GameScreen implements Screen {
         table.add(playButton).pad(10).width(150).left(); 
         table.add(btnBorrar).pad(10).width(150).right().row(); 
         table.add(btnRanking).pad(10).width(150).left(); 
-        table.add(btnAvatar).pad(10).width(150).right().row();
-        table.add(btnCambiar).colspan(2).pad(10).width(150).center().row(); 
+        table.add(btnHistorial).pad(10).width(150).right().row(); 
+        table.add(btnAvatar).pad(10).width(150).left();
+        table.add(btnCambiar).pad(10).width(150).right().row();
         table.add(backButton).colspan(2).pad(10).width(150).center().row(); 
 
         stage.addActor(table);
+    }
+    
+    
+    private void mostrarHistorialPartidas() {
+        List<Partida> historialPartidas = usuario.getHistorialPartidas();
+        StringBuilder builder = new StringBuilder();
+        
+        if (historialPartidas.isEmpty()) {
+            builder.append(languageManager.getText("no_historial_partidas"));
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            builder.append(languageManager.getText("historial_partidas_titulo")).append("\n\n");
+            
+            for (int i = 0; i < historialPartidas.size(); i++) {
+                Partida partida = historialPartidas.get(i);
+                builder.append(i + 1).append(". ");
+                builder.append(languageManager.getText("nivel")).append(": ").append(partida.getNivel()).append("\n");
+                builder.append("   ").append(languageManager.getText("fecha")).append(": ").append(sdf.format(partida.getFecha())).append("\n");
+                builder.append("   ").append(languageManager.getText("tiempo")).append(": ").append(partida.getTiempo()).append("s\n"); 
+                builder.append("   ").append(languageManager.getText("completado")).append(": ")
+                       .append(partida.isCompletado() ? languageManager.getText("si") : languageManager.getText("no")).append("\n\n");
+            }
+        }
+        
+        JTextArea area = new JTextArea(builder.toString());
+        area.setEditable(false);
+        area.setFocusable(false);
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        
+        JScrollPane scrollPane = new JScrollPane(area);
+        scrollPane.setPreferredSize(new Dimension(400, 400));
+        JOptionPane.showMessageDialog(null, scrollPane, languageManager.getText("historial_partidas"),  
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
@@ -227,8 +275,4 @@ public class GameScreen implements Screen {
         MenuScreen.musicMain.pause();
         
     }
-    
-   
 }
-
-
