@@ -369,13 +369,11 @@ protected void detenerHiloTiempo() {
                 if(isDragging && pathActual!=null){
                     colisionDetectada = verificarColisiones(pathActual);
                     if(colisionDetectada){
-                        System.out.println("Colision detectada");
                     } 
                 }
                 try{
                     Thread.sleep(50);
                 } catch ( InterruptedException e){
-                    System.out.println("Hilo de colisiones interrumpido");
                     break;
                 }
             }
@@ -394,7 +392,6 @@ protected void detenerHiloTiempo() {
     
     private boolean verificarColisiones(List<int[]> pathActual) {
     if(pathActual ==null){
-        System.out.println("Path actual es null");
         return false;
     }
     
@@ -404,13 +401,11 @@ protected void detenerHiloTiempo() {
 
         //skippeamos las dots finales e iniciales de la conexion
         if ((col ==dotInicialX && fila == dotInicialY) || (col ==dotFinalX && fila == dotFinalY)){
-            System.out.println("Se chequea como iniciales y finales" + fila + ","+col);
             continue;
         }
         
         if (numeroNivel!=5){
             if(grid[fila][col]==1){
-                System.out.println("Hay un 1 ");
                 return true;
             } 
             
@@ -423,11 +418,9 @@ protected void detenerHiloTiempo() {
         }
 
         if(celdasOcupadas.contains(new Par(col,fila))){
-            System.out.println("Celda ocupada en" + fila + "," + col);
             return true;
         }
     }
-        System.out.println("No colisiones");
     return false; 
 }
     
@@ -473,7 +466,6 @@ protected void detenerHiloTiempo() {
             return true;
         }
             if (PantallaJuego.manejoNivel.getNivelActual().grid[fila][col] == 1) { // si la celda contiene un dot
-                System.out.println("Dot seleccionada");
                 dotInicialX = col;
                 dotInicialY = fila;
                 dotFinalX = col;
@@ -481,7 +473,6 @@ protected void detenerHiloTiempo() {
                 isDragging = true;
                 PantallaJuego.manejoNivel.getNivelActual().pathActual = new ArrayList<>();
                 PantallaJuego.manejoNivel.getNivelActual().pathActual.add(new int[]{dotInicialX, dotInicialY}); // Add the starting position
-                System.out.println("Path inicializado");
                 return true;
             }
         }

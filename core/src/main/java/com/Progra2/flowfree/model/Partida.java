@@ -21,7 +21,7 @@ public class Partida implements Serializable {
         this.nivel = nivel;
         this.tiempo = tiempo;
         this.completado = completado;
-        this.fecha = new Date(); // Fecha y hora actual
+        this.fecha = new Date(); 
     }
     
     public Partida(int nivel, long tiempo, boolean completado, Date fecha) {
