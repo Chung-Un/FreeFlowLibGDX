@@ -208,36 +208,60 @@ public class GameScreen implements Screen {
     
     
     private void mostrarHistorialPartidas() {
-        List<Partida> historialPartidas = usuario.getHistorialPartidas();
-        StringBuilder builder = new StringBuilder();
-        
-        if (historialPartidas.isEmpty()) {
-            builder.append(languageManager.getText("no_historial_partidas"));
-        } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            builder.append(languageManager.getText("historial_partidas_titulo")).append("\n\n");
+        try {
+            List<Partida> historialPartidas = usuario.getHistorialPartidas();
+            StringBuilder builder = new StringBuilder();
             
-            for (int i = 0; i < historialPartidas.size(); i++) {
-                Partida partida = historialPartidas.get(i);
-                builder.append(i + 1).append(". ");
-                builder.append(languageManager.getText("nivel")).append(": ").append(partida.getNivel()).append("\n");
-                builder.append("   ").append(languageManager.getText("fecha")).append(": ").append(sdf.format(partida.getFecha())).append("\n");
-                builder.append("   ").append(languageManager.getText("tiempo")).append(": ").append(partida.getTiempo()).append("s\n"); 
-                builder.append("   ").append(languageManager.getText("completado")).append(": ")
-                       .append(partida.isCompletado() ? languageManager.getText("si") : languageManager.getText("no")).append("\n\n");
+            if (historialPartidas == null) {
+                System.out.println("Error: getHistorialPartidas() returned null");
+                builder.append(languageManager.getText("no_historial_partidas"));
+            } else if (historialPartidas.isEmpty()) {
+                System.out.println("Historial de partidas está vacío. Tamaño: 0");
+                builder.append(languageManager.getText("no_historial_partidas"));
+            } else {
+                System.out.println("Mostrando historial. Número de partidas: " + historialPartidas.size());
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                builder.append(languageManager.getText("historial_partidas_titulo")).append("\n\n");
+                
+                for (int i = 0; i < historialPartidas.size(); i++) {
+                    Partida partida = historialPartidas.get(i);
+                    if (partida == null) {
+                        System.out.println("Error: Partida #" + i + " es null");
+                        continue;
+                    }
+                    
+                    builder.append(i + 1).append(". ");
+                    
+                    try {
+                        builder.append(languageManager.getText("nivel")).append(": ").append(partida.getNivel()).append("\n");
+                        builder.append("   ").append(languageManager.getText("fecha")).append(": ").append(sdf.format(partida.getFecha())).append("\n");
+                        builder.append("   ").append(languageManager.getText("tiempo")).append(": ").append(partida.getTiempo()).append("s\n");
+                        builder.append("   ").append(languageManager.getText("completado")).append(": ")
+                               .append(partida.isCompletado() ? languageManager.getText("si") : languageManager.getText("no")).append("\n\n");
+                    } catch (Exception e) {
+                        System.err.println("Error al mostrar partida #" + i + ": " + e.getMessage());
+                        builder.append("Error al mostrar esta partida\n\n");
+                    }
+                }
             }
+            
+            JTextArea area = new JTextArea(builder.toString());
+            area.setEditable(false);
+            area.setFocusable(false);
+            area.setLineWrap(true);
+            area.setWrapStyleWord(true);
+            
+            JScrollPane scrollPane = new JScrollPane(area);
+            scrollPane.setPreferredSize(new Dimension(400, 400));
+            JOptionPane.showMessageDialog(null, scrollPane, languageManager.getText("historial_partidas"),  
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            System.err.println("Error al mostrar historial: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, 
+                "Error al mostrar el historial de partidas: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
-        JTextArea area = new JTextArea(builder.toString());
-        area.setEditable(false);
-        area.setFocusable(false);
-        area.setLineWrap(true);
-        area.setWrapStyleWord(true);
-        
-        JScrollPane scrollPane = new JScrollPane(area);
-        scrollPane.setPreferredSize(new Dimension(400, 400));
-        JOptionPane.showMessageDialog(null, scrollPane, languageManager.getText("historial_partidas"),  
-                JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
