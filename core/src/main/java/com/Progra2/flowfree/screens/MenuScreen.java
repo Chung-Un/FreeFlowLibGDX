@@ -104,6 +104,7 @@ public class MenuScreen implements Screen {
                 String password = passField.getText();
                 Usuario user = Usuario.cargarDatos(usuario);
                 if (user != null && user.verificarPassword(password)) {
+                    user.registrarInicioSesion();
                     game.setScreen(new GameScreen(game, user)); 
                 } else {
                     JOptionPane.showMessageDialog(null, languageManager.getText("datos_incorrectos"),"Fail",JOptionPane.ERROR_MESSAGE);

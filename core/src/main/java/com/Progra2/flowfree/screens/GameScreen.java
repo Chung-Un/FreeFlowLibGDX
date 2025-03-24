@@ -75,7 +75,7 @@ public class GameScreen implements Screen {
         
         texturaAvatar = new Texture(Gdx.files.internal(usuario.getAvatarFileDireccion()));
         imgAvatar = new Image(texturaAvatar);
-        imgAvatar.setSize(100,100);
+        imgAvatar.setSize(80,80);
 
         Texture texturaFondo = new Texture(Gdx.files.internal("FotoFondo.png")); 
         Image imgFondo = new Image(texturaFondo);
@@ -135,14 +135,6 @@ public class GameScreen implements Screen {
             }
         });
         
-        // Nuevo botón para historial de partidas
-        Button btnHistorial = new TextButton(languageManager.getText("historial_partidas"), skin);
-        btnHistorial.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                mostrarHistorialPartidas();
-            }
-        });
         
         Button btnAvatar= new TextButton(languageManager.getText("avatar_seleccion"),skin);
         btnAvatar.addListener(new ClickListener() {
@@ -190,80 +182,25 @@ public class GameScreen implements Screen {
         
         Table table = new Table();
         table.setFillParent(true);
+
         table.add(imgAvatar).colspan(2).size(100, 100).padBottom(10).row();
-        table.add(labelVolumen).colspan(2).padBottom(10).row();
-        table.add(volumenSlider).colspan(2).padBottom(10).row();
+        table.add(labelVolumen).colspan(2).padBottom(5).row();
+        table.add(volumenSlider).colspan(2).padBottom(5).row();
         table.add(btnGuardar).colspan(2).padBottom(10).row();
-        table.add(statsLabel).colspan(2).row();
+        table.add(statsLabel).colspan(2).padBottom(10).row();
+
         table.add(playButton).pad(10).width(150).left(); 
         table.add(btnBorrar).pad(10).width(150).right().row(); 
+
         table.add(btnRanking).pad(10).width(150).left(); 
-        table.add(btnHistorial).pad(10).width(150).right().row(); 
-        table.add(btnAvatar).pad(10).width(150).left();
-        table.add(btnCambiar).pad(10).width(150).right().row();
-        table.add(backButton).colspan(2).pad(10).width(150).center().row(); 
+        table.add(btnAvatar).pad(10).width(150).right().row(); 
+
+        table.add(btnCambiar).pad(10).width(150).left();
+        table.add(backButton).pad(10).width(150).right().row();
 
         stage.addActor(table);
     }
     
-    
-    private void mostrarHistorialPartidas() {
-        try {
-            List<Partida> historialPartidas = usuario.getHistorialPartidas();
-            StringBuilder builder = new StringBuilder();
-            
-            if (historialPartidas == null) {
-                System.out.println("Error: getHistorialPartidas() returned null");
-                builder.append(languageManager.getText("no_historial_partidas"));
-            } else if (historialPartidas.isEmpty()) {
-                System.out.println("Historial de partidas está vacío. Tamaño: 0");
-                builder.append(languageManager.getText("no_historial_partidas"));
-            } else {
-                System.out.println("Mostrando historial. Número de partidas: " + historialPartidas.size());
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                builder.append(languageManager.getText("historial_partidas_titulo")).append("\n\n");
-                
-                for (int i = 0; i < historialPartidas.size(); i++) {
-                    Partida partida = historialPartidas.get(i);
-                    if (partida == null) {
-                        System.out.println("Error: Partida #" + i + " es null");
-                        continue;
-                    }
-                    
-                    builder.append(i + 1).append(". ");
-                    
-                    try {
-                        builder.append(languageManager.getText("nivel")).append(": ").append(partida.getNivel()).append("\n");
-                        builder.append("   ").append(languageManager.getText("fecha")).append(": ").append(sdf.format(partida.getFecha())).append("\n");
-                        builder.append("   ").append(languageManager.getText("tiempo")).append(": ").append(partida.getTiempo()).append("s\n");
-                        builder.append("   ").append(languageManager.getText("completado")).append(": ")
-                               .append(partida.isCompletado() ? languageManager.getText("si") : languageManager.getText("no")).append("\n\n");
-                    } catch (Exception e) {
-                        System.err.println("Error al mostrar partida #" + i + ": " + e.getMessage());
-                        builder.append("Error al mostrar esta partida\n\n");
-                    }
-                }
-            }
-            
-            JTextArea area = new JTextArea(builder.toString());
-            area.setEditable(false);
-            area.setFocusable(false);
-            area.setLineWrap(true);
-            area.setWrapStyleWord(true);
-            
-            JScrollPane scrollPane = new JScrollPane(area);
-            scrollPane.setPreferredSize(new Dimension(400, 400));
-            JOptionPane.showMessageDialog(null, scrollPane, languageManager.getText("historial_partidas"),  
-                    JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception e) {
-            System.err.println("Error al mostrar historial: " + e.getMessage());
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, 
-                "Error al mostrar el historial de partidas: " + e.getMessage(), 
-                "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
     @Override
     public void show() {
 

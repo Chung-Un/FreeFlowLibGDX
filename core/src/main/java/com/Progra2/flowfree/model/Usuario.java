@@ -37,8 +37,6 @@ public class Usuario implements Serializable {
     private LocalDateTime ultimaSesion;
     public int nivelesCompletados;
     private long tiempoJugado;
-    private List<String> historialPartidasTexto; 
-    private List<Partida> historialPartidas;
     private Map<String, String> preferencias;
     private String avatar;
     private int puntuacionGeneral;
@@ -56,8 +54,6 @@ public class Usuario implements Serializable {
         this.ultimaSesion = fechaRegistro;
         this.nivelesCompletados = 0;
         this.tiempoJugado = 0;
-        this.historialPartidasTexto = new ArrayList<>();
-        this.historialPartidas = new ArrayList<>(); 
         this.preferencias = new HashMap<>();
         this.avatar = "default.png";
         this.avatarPersonalizadoDireccion=null;
@@ -71,7 +67,6 @@ public class Usuario implements Serializable {
         }
     }
 
-    // Método para cifrar la contraseña con SHA-256
     private String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -86,7 +81,6 @@ public class Usuario implements Serializable {
         }
     }
 
-    // Método para verificar la contraseña ingresada por el usuario
     public boolean verificarPassword(String passwordIngresada) {
         return this.passwordHash.equals(hashPassword(passwordIngresada));
     }
@@ -97,19 +91,12 @@ public class Usuario implements Serializable {
         this.tiempoJugado += tiempoSesion;
         this.ultimaSesion = LocalDateTime.now();
         this.ultimaFechaLogin = new Date(); // Actualizar la fecha de última sesión
-
-        // Registrar en el historial como texto (para compatibilidad)
-        this.historialPartidasTexto.add("Fecha: " + ultimaSesion
-                + ", Niveles: " + nuevosNiveles
-                + ", Tiempo: " + tiempoSesion + "s"
-                + ", Tiempo Promedio por Nivel: " + getTiempoPromedioPorNivel() + "s");
-
+        this.partidasTotales++;
         guardarDatos();
     }
 
     public void registrarPartida(int nivel, long tiempo, boolean completado) {
         Partida nuevaPartida = new Partida(nivel, tiempo, completado);
-        this.historialPartidas.add(nuevaPartida);
         this.partidasTotales++;
         this.ultimaFechaLogin = new Date(); // Actualizar fecha de última sesión
         
@@ -120,23 +107,18 @@ public class Usuario implements Serializable {
         guardarDatos();
     }
 
-    // Método para cambiar la contraseña del usuario
     public boolean cambiarPassword(String passwordActual, String nuevaPassword) {
-        // Verificar que la contraseña actual sea correcta
         if (!verificarPassword(passwordActual)) {
             return false; 
         }
         
-        // Actualizar la contraseña con el nuevo hash
         this.passwordHash = hashPassword(nuevaPassword);
         
-        // Guardar los cambios
         guardarDatos();
         
-        return true; // Cambio exitoso
+        return true; 
     }
 
-    // Método para obtener el tiempo promedio por nivel
     public double getTiempoPromedioPorNivel() {
         if (nivelesCompletados == 0) {
             return 0;
@@ -144,7 +126,6 @@ public class Usuario implements Serializable {
         return (double) getTiemposPorNivelTotal() / nivelesCompletados;
     }
 
-    // Método para establecer preferencias del usuario
     public void setPreferencia(String clave, String valor) {
         this.preferencias.put(clave, valor);
         guardarDatos();
@@ -158,13 +139,11 @@ public class Usuario implements Serializable {
         return tiempoTotal;
     }
     
-    // Método para registrar inicio de sesión
     public void registrarInicioSesion() {
         this.ultimaFechaLogin = new Date();
         guardarDatos();
     }
     
-    // Método para establecer avatar
     public void setAvatar(String avatarPath) {
         this.avatar = avatarPath;
         this.avatarPersonalizadoDireccion=null;
@@ -191,14 +170,12 @@ public class Usuario implements Serializable {
         return "avatars/defaultAvatar.png"; 
     }
 
-    // Método para eliminar usuario
     public void eliminarCuenta() {
         File archivo = new File("usuarios/" + nombreUsuario + ".dat");
         if (archivo.exists()) {
             archivo.delete();
         }
         
-        //borrar su avatar personalizado si tiene uno
         if (avatarPersonalizadoDireccion != null) {
             File archivoAvatarPersonalizado = new File(avatarPersonalizadoDireccion);
             if (archivoAvatarPersonalizado.exists()) {
@@ -211,13 +188,11 @@ public class Usuario implements Serializable {
 
     public void guardarDatos() {
         try {
-            // Crear la carpeta "usuarios" si no existe
             File carpeta = new File("usuarios");
             if (!carpeta.exists()) {
                 carpeta.mkdirs();
             }
 
-            // Guardar el archivo en la carpeta "usuarios"
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("usuarios/" + nombreUsuario + ".dat"))) {
                 oos.writeObject(this);
             }
@@ -270,17 +245,6 @@ public class Usuario implements Serializable {
         return puntuacionGeneral;
     }
 
-    
-    public List<String> getHistorialPartidasTexto() {
-        return historialPartidasTexto;
-    }
-    
-    
-    public List<Partida> getHistorialPartidas() {
-        return historialPartidas;
-    }
-    
-    
     public Date getUltimaFechaLogin() {
         return ultimaFechaLogin;
     }

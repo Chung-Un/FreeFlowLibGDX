@@ -204,6 +204,7 @@ public abstract class Nivel implements InputProcessor{
         if(jugador.nivelesCompletados<5 && PantallaJuego.manejoNivel.getNivelActual().numeroNivel > jugador.nivelesCompletados){
             jugador.actualizarEstadisticas(1, tiempoJugado);
         } else if(jugador.nivelesCompletados>5){
+            
             jugador.actualizarEstadisticas(0, tiempoJugado);
         }
         jugador.tiemposPorNivel.set(numeroNivel-1, (tiempoLimite - tiempoRestante));
