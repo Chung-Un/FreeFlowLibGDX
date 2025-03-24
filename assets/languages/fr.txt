@@ -54,7 +54,15 @@ password_no_coincide=Les mots de passe ne correspondent pas
 password_cambiada=Mot de passe changé avec succès
 password_actual_incorrecta=Mot de passe actuel incorrect
 total_partidas=Total des jeux
-
+historial_partidas=Historique des parties
+historial_partidas_titulo=Historique des parties jouées
+no_historial_partidas=Il n'y a pas de parties enregistrées dans l'historique.
+nivel=Niveau
+fecha=Date
+tiempo=Temps
+completado=Terminé
+si=Oui
+no=Non
 
 
 
